@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_home_icon"
+            app:title="DISTANCE" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/distance_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#55000000"
+            android:src="@android:drawable/ic_menu_camera"
+            app:layout_constraintBottom_toTopOf="@id/detail_container"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DISTANCE VIEW"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="25dp"
+            android:paddingHorizontal="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/distance_container">
+
+            <TextView
+                android:id="@+id/marker_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LX MARKER NO"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/marker_number"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/marker_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00:00:00:00:00"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/marker_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/marker_name"
+                app:layout_constraintTop_toTopOf="@id/marker_name" />
+
+            <Button
+                android:id="@+id/finish_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:text="종료"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/marker_number" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="table_text_view_header">
+        <item name="android:background">@drawable/border</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:paddingVertical" tools:targetApi="o">5dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="table_text_view">
+        <item name="android:background">@drawable/border</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+</resources>

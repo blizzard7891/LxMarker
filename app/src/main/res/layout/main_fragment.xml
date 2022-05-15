@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <Button
+            android:id="@+id/setting_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="30dp"
+            android:text="전송주기설정"
+            app:layout_constraintBottom_toTopOf="@id/measure_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Button
+            android:id="@+id/measure_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="거리측정"
+            app:layout_constraintBottom_toTopOf="@id/check_in_button"
+            app:layout_constraintEnd_toEndOf="@id/setting_button"
+            app:layout_constraintStart_toStartOf="@id/setting_button"
+            app:layout_constraintTop_toBottomOf="@id/setting_button" />
+
+        <Button
+            android:id="@+id/check_in_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="무선체크인"
+            app:layout_constraintBottom_toTopOf="@id/wireless_tag_button"
+            app:layout_constraintEnd_toEndOf="@id/setting_button"
+            app:layout_constraintStart_toStartOf="@id/setting_button"
+            app:layout_constraintTop_toBottomOf="@id/measure_button" />
+
+        <Button
+            android:id="@+id/wireless_tag_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="무선태그"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/setting_button"
+            app:layout_constraintStart_toStartOf="@id/setting_button"
+            app:layout_constraintTop_toBottomOf="@id/check_in_button" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

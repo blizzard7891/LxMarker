@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.lxmarker.MainFragment"
+        tools:layout="@layout/main_fragment">
+        <action
+            android:id="@+id/action_mainFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_measureFragment"
+            app:destination="@id/measureFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_checkInFragment"
+            app:destination="@id/checkInFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_wirelessTagFragment"
+            app:destination="@id/wirelessTagFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.lxmarker.SettingFragment"
+        tools:layout="@layout/setting_fragment" />
+
+    <fragment
+        android:id="@+id/measureFragment"
+        android:name="com.example.lxmarker.MeasureFragment"
+        tools:layout="@layout/setting_fragment" />
+
+    <fragment
+        android:id="@+id/checkInFragment"
+        android:name="com.example.lxmarker.CheckInFragment"
+        tools:layout="@layout/setting_fragment" />
+
+    <fragment
+        android:id="@+id/wirelessTagFragment"
+        android:name="com.example.lxmarker.WirelessTagFragment"
+        tools:layout="@layout/setting_fragment" />
+</navigation>

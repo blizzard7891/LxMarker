@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/order"
+            style="@style/table_text_view_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="순번"
+            app:layout_constraintEnd_toStartOf="@id/time"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/time"
+            style="@style/table_text_view_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="시간"
+            app:layout_constraintEnd_toStartOf="@id/marker_number"
+            app:layout_constraintStart_toEndOf="@id/order"
+            app:layout_constraintTop_toTopOf="@id/order" />
+
+        <TextView
+            android:id="@+id/marker_number"
+            style="@style/table_text_view_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="마커NO"
+            app:layout_constraintEnd_toStartOf="@id/acceleration"
+            app:layout_constraintStart_toEndOf="@id/time"
+            app:layout_constraintTop_toTopOf="@id/order" />
+
+        <TextView
+            android:id="@+id/acceleration"
+            style="@style/table_text_view_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="가속도"
+            app:layout_constraintEnd_toStartOf="@id/battery"
+            app:layout_constraintStart_toEndOf="@id/marker_number"
+            app:layout_constraintTop_toTopOf="@id/order" />
+
+        <TextView
+            android:id="@+id/battery"
+            style="@style/table_text_view_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="배터리"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/acceleration"
+            app:layout_constraintTop_toTopOf="@id/order" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

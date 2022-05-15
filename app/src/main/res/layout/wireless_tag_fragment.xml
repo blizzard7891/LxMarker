@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_home_icon"
+            app:title="BEACON MODE" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/distance_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#55000000"
+            android:src="@android:drawable/ic_menu_camera"
+            app:layout_constraintBottom_toTopOf="@id/detail_container"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DISTANCE VIEW"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="25dp"
+            android:paddingHorizontal="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/distance_container">
+
+            <TextView
+                android:id="@+id/user_name_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="USER"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/user_name"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="홍길동"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/user_name_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/user_name_label"
+                app:layout_constraintTop_toTopOf="@id/user_name_label" />
+
+            <TextView
+                android:id="@+id/user_id_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="USER ID"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/user_id"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/user_name_label" />
+
+            <TextView
+                android:id="@+id/user_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="00:00:00:00:00:00"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/user_id_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/user_id_label"
+                app:layout_constraintTop_toTopOf="@id/user_id_label" />
+
+            <Button
+                android:id="@+id/set_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:text="USER SET"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/user_id_label" />
+
+            <Button
+                android:id="@+id/finish_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="종료"
+                app:layout_constraintBottom_toBottomOf="@id/set_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/set_button" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
