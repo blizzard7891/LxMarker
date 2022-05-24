@@ -2,7 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="table_text_view_header">
-        <item name="android:background">@drawable/border</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">center</item>
         <item name="android:paddingVertical" tools:targetApi="o">5dp</item>
@@ -10,7 +9,28 @@
     </style>
 
     <style name="table_text_view">
-        <item name="android:background">@drawable/border</item>
+<!--        <item name="android:background">@drawable/border</item>-->
+        <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:paddingVertical" tools:targetApi="o">5dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="main_button">
+        <item name="android:background">@drawable/rounded_button</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+    </style>
+
+    <style name="sub_button">
+        <item name="android:background">@drawable/rounded_button</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="description_panel">
+        <item name="android:background">@drawable/rounded_item_bg</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginHorizontal" tools:targetApi="o">10dp</item>
     </style>
 </resources>

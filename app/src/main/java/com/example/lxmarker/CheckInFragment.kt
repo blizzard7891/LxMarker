@@ -21,12 +21,13 @@ class CheckInFragment : Fragment(R.layout.check_in_fragment) {
         binding = DataBindingUtil.bind(view)
 
         binding?.toolbar?.apply {
-            setNavigationIcon(R.drawable.ic_home_icon)
+            setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
             setNavigationOnClickListener { findNavController().popBackStack() }
         }
 
         binding?.checkInListview?.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
             adapter = this@CheckInFragment.adapter
         }
 

@@ -21,7 +21,7 @@ class SettingFragment : Fragment(R.layout.setting_fragment) {
         binding = DataBindingUtil.bind(view)
 
         binding?.settingToolbar?.apply {
-            setNavigationIcon(R.drawable.ic_home_icon)
+            setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
             setNavigationOnClickListener { findNavController().popBackStack() }
             inflateMenu(R.menu.setting_menu)
         }
@@ -29,7 +29,6 @@ class SettingFragment : Fragment(R.layout.setting_fragment) {
         binding?.scanResultListview?.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = this@SettingFragment.adapter
-            addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         }
 
         adapter.submitList(listOf(ScanResult("test"), ScanResult("test2")))

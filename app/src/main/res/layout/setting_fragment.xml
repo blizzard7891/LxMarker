@@ -4,6 +4,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="@color/default_bg"
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
@@ -11,7 +12,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_home_icon"
             app:title="BLE SCAN" />
 
         <androidx.recyclerview.widget.RecyclerView

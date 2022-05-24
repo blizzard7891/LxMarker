@@ -7,4 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="nephritis">#55efc4</color>
+    <color name="mint">#00b894</color>
+    <color name="default_bg">#E8E9EC</color>
 </resources>

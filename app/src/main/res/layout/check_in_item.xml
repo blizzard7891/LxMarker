@@ -4,11 +4,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/order"
-            style="@style/table_text_view_header"
+            style="@style/table_text_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="1"
@@ -21,7 +22,7 @@
 
         <TextView
             android:id="@+id/time"
-            style="@style/table_text_view_header"
+            style="@style/table_text_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="22.04.06\n00:06:00"
@@ -33,7 +34,7 @@
 
         <TextView
             android:id="@+id/marker_number"
-            style="@style/table_text_view_header"
+            style="@style/table_text_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="00:00:00\n00:00:00"
@@ -45,7 +46,7 @@
 
         <TextView
             android:id="@+id/acceleration"
-            style="@style/table_text_view_header"
+            style="@style/table_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="X:00\nY:00\nZ:00"
@@ -57,7 +58,7 @@
 
         <TextView
             android:id="@+id/battery"
-            style="@style/table_text_view_header"
+            style="@style/table_text_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="96%"

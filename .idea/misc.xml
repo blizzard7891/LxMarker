@@ -7,16 +7,19 @@
         <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/drawable-v24/border.xml" value="0.1625" />
         <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/drawable/ic_home_icon.xml" value="0.1" />
         <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/drawable/ic_launcher_background.xml" value="0.148" />
+        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/drawable/multiple_circles.xml" value="0.2455" />
+        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/drawable/rounded.xml" value="0.1535" />
         <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/drawable/rounded_border.xml" value="0.1" />
+        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/drawable/rounded_item_bg.xml" value="0.2455" />
         <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/activity_main.xml" value="0.24547101449275363" />
         <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/check_in_fragment.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/check_in_item.xml" value="0.25364583333333335" />
-        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/check_in_top_item.xml" value="0.264" />
-        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/measure_fragment.xml" value="0.25364583333333335" />
-        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/scan_item.xml" value="0.264" />
+        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/check_in_top_item.xml" value="0.6" />
+        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/measure_fragment.xml" value="0.264" />
+        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/scan_item.xml" value="0.4" />
         <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/setting_fragment.xml" value="0.24547101449275363" />
-        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/user_setup_dialog.xml" value="0.264" />
-        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/wireless_tag_fragment.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/user_setup_dialog.xml" value="0.4" />
+        <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/layout/wireless_tag_fragment.xml" value="0.4" />
         <entry key="..\:/Users/blliz/AndroidStudioProjects/LxMarker/app/src/main/res/menu/setting_menu.xml" value="0.11481481481481481" />
       </map>
     </option>
