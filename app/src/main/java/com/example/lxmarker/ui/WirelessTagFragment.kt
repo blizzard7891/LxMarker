@@ -1,4 +1,4 @@
-package com.example.lxmarker
+package com.example.lxmarker.ui
 
 import android.content.Context
 import android.graphics.Point
@@ -8,8 +8,9 @@ import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.lxmarker.R
 import com.example.lxmarker.databinding.WirelessTagFragmentBinding
-import com.example.lxmarker.dialog.UserSetDialogFragment
+import com.example.lxmarker.ui.dialog.UserSetDialogFragment
 
 class WirelessTagFragment : Fragment(R.layout.wireless_tag_fragment) {
 

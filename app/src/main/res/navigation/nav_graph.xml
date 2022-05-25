@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.lxmarker.MainFragment"
+        android:name="com.example.lxmarker.ui.MainFragment"
         tools:layout="@layout/main_fragment">
         <action
             android:id="@+id/action_mainFragment_to_settingFragment"
@@ -25,21 +25,29 @@
 
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.example.lxmarker.SettingFragment"
+        android:name="com.example.lxmarker.ui.SettingFragment"
         tools:layout="@layout/setting_fragment" />
 
     <fragment
         android:id="@+id/measureFragment"
-        android:name="com.example.lxmarker.MeasureFragment"
+        android:name="com.example.lxmarker.ui.MeasureFragment"
         tools:layout="@layout/setting_fragment" />
 
     <fragment
         android:id="@+id/checkInFragment"
-        android:name="com.example.lxmarker.CheckInFragment"
+        android:name="com.example.lxmarker.ui.CheckInFragment"
         tools:layout="@layout/setting_fragment" />
 
     <fragment
         android:id="@+id/wirelessTagFragment"
-        android:name="com.example.lxmarker.WirelessTagFragment"
+        android:name="com.example.lxmarker.ui.WirelessTagFragment"
         tools:layout="@layout/setting_fragment" />
+
+    <fragment
+        android:id="@+id/scannerFragment"
+        android:name="com.example.lxmarker.ui.ScannerFragment" />
+
+    <fragment
+        android:id="@+id/cycleSettingFragment"
+        android:name="com.example.lxmarker.ui.CycleSettingFragment" />
 </navigation>

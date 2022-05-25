@@ -1,4 +1,4 @@
-package com.example.lxmarker.adapter
+package com.example.lxmarker.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View

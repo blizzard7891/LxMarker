@@ -1,4 +1,4 @@
-package com.example.lxmarker.dialog
+package com.example.lxmarker.ui.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater

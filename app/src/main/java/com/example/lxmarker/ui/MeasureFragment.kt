@@ -1,4 +1,4 @@
-package com.example.lxmarker
+package com.example.lxmarker.ui
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -10,6 +10,7 @@ import android.view.animation.LinearInterpolator
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.lxmarker.R
 import com.example.lxmarker.databinding.MeasureFragmentBinding
 
 class MeasureFragment : Fragment(R.layout.measure_fragment) {

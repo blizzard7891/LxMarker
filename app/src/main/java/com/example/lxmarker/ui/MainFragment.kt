@@ -1,12 +1,12 @@
-package com.example.lxmarker
+package com.example.lxmarker.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.example.lxmarker.R
 import com.example.lxmarker.databinding.MainFragmentBinding
 
 class MainFragment : Fragment(R.layout.main_fragment) {

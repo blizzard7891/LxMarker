@@ -1,4 +1,4 @@
-package com.example.lxmarker
+package com.example.lxmarker.ui
 
 import android.os.Bundle
 import android.view.View
@@ -7,7 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.lxmarker.adapter.CheckInItemListAdapter
+import com.example.lxmarker.R
+import com.example.lxmarker.ui.adapter.CheckInItemListAdapter
 import com.example.lxmarker.data.CheckInItem
 import com.example.lxmarker.databinding.CheckInFragmentBinding
 
