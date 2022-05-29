@@ -88,11 +88,8 @@ class ActivityViewModel @Inject constructor(app: Application) : AndroidViewModel
                     override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
                         super.onCharacteristicRead(gatt, characteristic, status)
                         val value = String(characteristic.value)
+                        Log.d(TAG, "onCharacteristicRead = $value, uuid = ${characteristic.uuid}")
                         cyclePeriod.postValue(CyclePeriod.convertFromString(value))
-                        if (status == BluetoothGatt.GATT_SUCCESS) {
-                            Log.d(TAG, "onCharacteristicRead = $value, uuid = ${characteristic.uuid}")
-
-                        }
                     }
                 })
         }
