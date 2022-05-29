@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.lxmarker.ui.MeasureViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,8 +38,8 @@
                 android:id="@+id/circle"
                 android:layout_width="300dp"
                 android:layout_height="300dp"
-                android:background="@drawable/multiple_circles"
                 android:alpha="0"
+                android:background="@drawable/multiple_circles"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -108,7 +115,7 @@
                 android:id="@+id/marker_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="EA:2F:0D:92:5C:3E"
+                android:text="@{viewModel.scanItem.scanResult.device.address}"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/marker_name"

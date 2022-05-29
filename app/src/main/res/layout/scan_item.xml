@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.lxmarker.ui.SettingViewModel" />
+            type="com.example.lxmarker.ui.ActivityViewModel" />
 
         <variable
             name="item"
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
-                android:onClick="@{() -> viewModel.startCycleSetting()}"
+                android:onClick="@{() -> viewModel.startCycleSetting(item)}"
                 android:text="NB-IoT SET"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toTopOf="@id/uwb_button"
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="15dp"
-                android:onClick="@{() -> viewModel.startUwb()}"
+                android:onClick="@{() -> viewModel.startUwb(item)}"
                 android:text="UWB"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"

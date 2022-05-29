@@ -1,6 +1,5 @@
 package com.example.lxmarker.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
@@ -9,12 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lxmarker.data.ScanResultItem
 import com.example.lxmarker.databinding.ScanItemBinding
-import com.example.lxmarker.ui.SettingViewModel
+import com.example.lxmarker.ui.ActivityViewModel
 
 
 class ScanItemListAdapter(
     private val owner: LifecycleOwner,
-    private val viewModel: SettingViewModel
+    private val viewModel: ActivityViewModel
 ) : ListAdapter<ScanResultItem, ScanItemListAdapter.ItemHolder>(ItemDIffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {

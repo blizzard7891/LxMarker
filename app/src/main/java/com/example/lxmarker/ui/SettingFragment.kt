@@ -8,7 +8,6 @@ import android.bluetooth.le.ScanCallback
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -19,7 +18,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lxmarker.R
 import com.example.lxmarker.ui.adapter.ScanItemListAdapter
-import com.example.lxmarker.data.ScanResultItem
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.databinding.SettingFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,16 +29,14 @@ import java.util.concurrent.TimeUnit
 class SettingFragment : Fragment(R.layout.setting_fragment) {
 
     private var binding: SettingFragmentBinding? = null
-    private val viewModel: SettingViewModel by viewModels()
+    private val viewModel: ActivityViewModel by viewModels({ requireActivity() })
 
     private val navController: NavController by lazy { findNavController() }
     private val adapter by lazy { ScanItemListAdapter(viewLifecycleOwner, viewModel) }
-    private val bluetoothAdapter: BluetoothAdapter by lazy {
-        (requireActivity().getSystemService(
-            Context.BLUETOOTH_SERVICE
-        ) as BluetoothManager).adapter
+    private val bluetoothAdapter: BluetoothAdapter? by lazy {
+        (requireActivity().getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter
     }
-    private val scanner: BluetoothLeScanner by lazy { bluetoothAdapter.bluetoothLeScanner }
+    private val scanner: BluetoothLeScanner? by lazy { bluetoothAdapter?.bluetoothLeScanner }
     private var scanning: Boolean = false
 
     private val scanCallback = object : ScanCallback() {
@@ -79,12 +75,13 @@ class SettingFragment : Fragment(R.layout.setting_fragment) {
         initView()
         setObserver()
 
-        startScanning()
+        if (!scanning) startScanning()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        stopScanning()
     }
 
     private fun initView() {
@@ -123,22 +120,25 @@ class SettingFragment : Fragment(R.layout.setting_fragment) {
             return
         }
 
-        scanning = true
-        scanner.startScan(scanCallback)
+        Completable.fromAction {
+            scanning = true
+            scanner?.startScan(scanCallback)
 
-        Completable.timer(SCAN_PERIOD, TimeUnit.MILLISECONDS)
-            .doOnComplete { stopScanning() }
-            .subscribe()
-
-        val toastText = "${getString(R.string.scan_start_toast)}  " +
-                "${TimeUnit.SECONDS.convert(SCAN_PERIOD, TimeUnit.MILLISECONDS)}  " +
-                getString(R.string.seconds)
-        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+            val toastText = "${getString(R.string.scan_start_toast)}  " +
+                    "${TimeUnit.SECONDS.convert(SCAN_PERIOD, TimeUnit.MILLISECONDS)}  " +
+                    getString(R.string.seconds)
+            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+        }.andThen(Completable.timer(SCAN_PERIOD, TimeUnit.MILLISECONDS))
+            .doOnTerminate { stopScanning() }
+            .subscribe(
+                { Log.d(TAG, "startScanning complete") },
+                { Log.e(TAG, "startScanning error: $it") }
+            )
     }
 
     private fun stopScanning() {
         Log.d(TAG, "Stop scanning")
-        scanner.stopScan(scanCallback)
+        scanner?.stopScan(scanCallback)
         scanning = false
     }
 

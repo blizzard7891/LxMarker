@@ -21,7 +21,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         binding?.apply {
             settingButton.setOnClickListener { navController.navigate(R.id.settingFragment) }
 
-            measureButton.setOnClickListener { navController.navigate(R.id.measureFragment) }
+            measureButton.setOnClickListener { navController.navigate(R.id.settingFragment) }
 
             checkInButton.setOnClickListener { navController.navigate(R.id.checkInFragment) }
 

@@ -43,6 +43,4 @@ public class Constants {
 
     public static final int DIST_CMD_CHAR_IDX = 0;
     public static final int CYCLE_CMD_CHAR_IDX = 1;
-
-
 }

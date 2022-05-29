@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.lxmarker.ui.SettingViewModel" />
+            type="com.example.lxmarker.ui.ActivityViewModel" />
 
         <import type="android.view.View" />
     </data>
