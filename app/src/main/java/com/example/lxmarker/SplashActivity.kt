@@ -1,9 +1,13 @@
 package com.example.lxmarker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import com.example.lxmarker.ui.MainActivity
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("CustomSplashScreen")
@@ -15,6 +19,14 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startLoading() {
-        Handler().postDelayed({ finish() }, 1000)
+        MainScope().launch {
+            delay(1000L)
+            startMainActivity()
+        }
+    }
+
+    private fun startMainActivity() {
+        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+        finish()
     }
 }
