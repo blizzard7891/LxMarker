@@ -2,17 +2,24 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="item"
+            type="com.example.lxmarker.data.CheckInItem.Item" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="@color/white"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/order"
             style="@style/table_text_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="1"
+            android:text="@{item.checkIn.idText}"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/time"
@@ -25,7 +32,7 @@
             style="@style/table_text_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="22.04.06\n00:06:00"
+            android:text="@{item.checkIn.time}"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/marker_number"
@@ -37,7 +44,7 @@
             style="@style/table_text_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="00:00:00\n00:00:00"
+            android:text="@{item.checkIn.markerNum}"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/acceleration"
@@ -49,7 +56,8 @@
             style="@style/table_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="X:00\nY:00\nZ:00"
+            android:text="@{@string/acceleration_text(item.checkIn.x, item.checkIn.y, item.checkIn.z)}"
+            android:textAlignment="textStart"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/battery"
@@ -61,7 +69,7 @@
             style="@style/table_text_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="96%"
+            android:text="@{@string/battery_level(item.checkIn.battery)}"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

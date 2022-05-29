@@ -3,6 +3,7 @@ package com.example.lxmarker.ui
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
+import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -21,15 +22,17 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.lxmarker.BuildConfig
 import com.example.lxmarker.R
+import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.databinding.MeasureFragmentBinding
+import com.example.lxmarker.util.HexDump
 import com.hoho.android.usbserial.driver.*
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class MeasureFragment : Fragment(R.layout.measure_fragment) {
-
-    enum class UsbPermission {
-        UNKNOWN, REQUESTED, GRANTED, DENIED
-    }
 
     private var binding: MeasureFragmentBinding? = null
     private val viewModel: ActivityViewModel by viewModels({ requireActivity() })
@@ -38,6 +41,10 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
     private val usbManager: UsbManager by lazy { requireActivity().getSystemService(Context.USB_SERVICE) as UsbManager }
     private var selectedDriver: UsbSerialDriver? = null
     private var connected: Boolean = false
+    private var usbSerialPort: UsbSerialPort? = null
+
+    private var readDisposable: Disposable? = null
+    private var cmdDisposable: Disposable? = null
 
     private val permissionReceiver: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
@@ -51,17 +58,77 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.selectedScanItem.value?.let(measureViewModel::setItem)
+        viewModel.connectDevice()
         connect()
+    }
+
+    override fun onDestroy() {
+        viewModel.disConnectGatt()
+        cmdDisposable?.dispose()
+        super.onDestroy()
     }
 
     override fun onResume() {
         super.onResume()
         activity?.registerReceiver(permissionReceiver, IntentFilter(INTENT_ACTION_GRANT_USB))
+        readDisposable = read().subscribe({
+            if (!connected) return@subscribe
+            val port = usbSerialPort ?: return@subscribe
+
+            readBuffer(port)
+        }, {
+            Log.e(TAG, "$it")
+        })
     }
 
     override fun onPause() {
         super.onPause()
         activity?.unregisterReceiver(permissionReceiver)
+        readDisposable?.dispose()
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = DataBindingUtil.bind<MeasureFragmentBinding?>(view)?.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = this@MeasureFragment.measureViewModel
+        }
+
+        initView()
+        setObserver()
+    }
+
+
+    private fun setObserver() {
+        viewModel.gattServiceDiscovered.observe(viewLifecycleOwner) {
+            if (it) {
+                cmdDisposable = Observable.interval(1, TimeUnit.SECONDS)
+                    .subscribe({
+                        viewModel.sendStartCmd()
+                    }, {
+                        Log.e(TAG, "$it")
+                    })
+            }
+        }
+
+        viewModel.viewEvent.observe(viewLifecycleOwner) { event ->
+            if (event == ViewEvent.BleDisconnected) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.connection_alert_title)
+                    .setMessage(R.string.connection_alert_message)
+                    .setPositiveButton(R.string.connection_alert_button) { _, _ ->
+                        findNavController().popBackStack()
+                    }
+                    .show()
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     private fun connect() {
@@ -106,25 +173,32 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
         try {
             port.open(connection)
             port.setParameters(115200, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE)
+            usbSerialPort = port
+            connected = true
         } catch (e: IOException) {
             Toast.makeText(context, R.string.connection_open_failed, Toast.LENGTH_SHORT).show()
             Log.e(TAG, "$e")
         }
     }
 
-    fun read() {
-
+    private fun read(): Observable<Long> {
+        return Observable.interval(1, TimeUnit.SECONDS)
+            .subscribeOn(Schedulers.io())
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = DataBindingUtil.bind<MeasureFragmentBinding?>(view)?.apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = this@MeasureFragment.measureViewModel
-        }
+    private fun readBuffer(port: UsbSerialPort) {
+        try {
+            val buffer = ByteArray(8192)
+            val len = port.read(buffer, READ_WAIT_MILLIS)
+            val readBuffer = buffer.copyOf(len)
 
-        initView()
-        viewModel.selectedScanItem.value?.let(measureViewModel::setItem)
+            if (len != 0) {
+                Log.d(TAG, "read:[$len] ${HexDump.dumpHexString(readBuffer)}")
+                measureViewModel.setReadByteArray(readBuffer)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "$e")
+        }
     }
 
     private fun initView() {
@@ -171,14 +245,9 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
         }.start()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }
-
     private companion object {
         const val TAG = "MeasureFragment"
         const val INTENT_ACTION_GRANT_USB: String = BuildConfig.APPLICATION_ID + ".GRANT_USB"
-
+        const val READ_WAIT_MILLIS = 300
     }
 }

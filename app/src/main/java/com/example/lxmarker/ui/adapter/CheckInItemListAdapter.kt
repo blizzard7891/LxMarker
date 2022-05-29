@@ -27,13 +27,21 @@ class CheckInItemListAdapter :
         }
     }
 
-    override fun onBindViewHolder(holder: CheckInViewHolder, position: Int) = Unit
+    override fun onBindViewHolder(holder: CheckInViewHolder, position: Int) {
+        if (holder is CheckInViewHolder.Item) {
+            holder.bind(getItem(position) as CheckInItem.Item)
+        }
+    }
 
     override fun getItemViewType(position: Int): Int = getItem(position).layoutResId
 
     sealed class CheckInViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
         class Top(binding: CheckInTopItemBinding) : CheckInViewHolder(binding.root)
-        class Item(binding: CheckInItemBinding) : CheckInViewHolder(binding.root)
+        class Item(private val binding: CheckInItemBinding) : CheckInViewHolder(binding.root) {
+            fun bind(item: CheckInItem.Item) {
+                binding.item = item
+            }
+        }
     }
 
     private object ItemDiffCallback : DiffUtil.ItemCallback<CheckInItem>() {

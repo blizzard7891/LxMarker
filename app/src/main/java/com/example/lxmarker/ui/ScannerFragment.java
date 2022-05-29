@@ -90,13 +90,6 @@ public class ScannerFragment extends ListFragment {
 
     }
 
-    public void setDebugMsg(String msg){
-        mAdapter.debugMessage += "\n" + msg;
-        setEmptyText(msg);
-        mAdapter.notifyDataSetChanged();
-    }
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,65 +107,6 @@ public class ScannerFragment extends ListFragment {
         mAdapter = new ScanResultAdapter(getActivity().getApplicationContext(),
                 LayoutInflater.from(getActivity()));
         mHandler = new Handler();
-
-        /*
-        *     // Find all available drivers from attached devices.
-    UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
-    List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(manager);
-    if (availableDrivers.isEmpty()) {
-        return;
-    }
-
-    // Open a connection to the first available driver.
-    UsbSerialDriver driver = availableDrivers.get(0);
-    UsbDeviceConnection connection = manager.openDevice(driver.getDevice());
-    if (connection == null) {
-        // add UsbManager.requestPermission(driver.getDevice(), ..) handling here
-        return;
-    }
-
-    UsbSerialPort port = driver.getPorts().get(0); // Most devices have just one port (port 0)
-    port.open(connection);
-    port.setParameters(115200, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);*/
-
-        // Find all available drivers from attached devices.
-        UsbManager usbManager = null;
-        UsbDeviceConnection connection = null;
-        UsbSerialDriver driver = null;
-        UsbSerialPort port = null;
-        UsbDevice device = null;
-
-        usbManager = (UsbManager) requireActivity().getSystemService(Context.USB_SERVICE);
-        List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
-        if (availableDrivers.isEmpty()){
-            Log.d("HUME", "availableDrivers empty");
-        }
-
-        for (UsbSerialDriver usd : availableDrivers) {
-            device = usd.getDevice();
-            setDebugMsg("drivder: " + usd + ", vendor: " + device.getVendorId() + ", productName: " + device.getProductName());
-            if (device.getVendorId()==0x067B || device.getProductId()==2303){
-                driver = usd;
-                break;
-            }
-        }
-
-        // Open a connection to the first available driver.
-        connection = usbManager.openDevice(device);
-        if (connection == null) {
-            setDebugMsg("connection null");
-            // add UsbManager.requestPermission(driver.getDevice(), ..) handling here
-            return;
-        }
-
-        port = driver.getPorts().get(0); // Most devices have just one port (port 0)
-        try {
-            port.open(connection);
-            port.setParameters(115200, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d("HUME", "" + e);
-        }
     }
 
     @Override

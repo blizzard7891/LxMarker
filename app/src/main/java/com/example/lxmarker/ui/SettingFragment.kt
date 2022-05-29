@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -22,6 +23,7 @@ import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.databinding.SettingFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 @SuppressLint("MissingPermission")
@@ -38,16 +40,15 @@ class SettingFragment : Fragment(R.layout.setting_fragment) {
     }
     private val scanner: BluetoothLeScanner? by lazy { bluetoothAdapter?.bluetoothLeScanner }
     private var scanning: Boolean = false
+    private var disposable: Disposable? = null
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: android.bluetooth.le.ScanResult) {
             super.onScanResult(callbackType, result)
-            Log.d(TAG, "scan result: $result")
-
             val deviceName = result.device.name
+            Log.d(TAG, "scan result: $deviceName")
             if (deviceName.isNullOrEmpty() || !deviceName.contains("LX"))
                 return
-            Log.d(TAG, "name: $deviceName ")
             viewModel.setScanResult(result)
         }
 
@@ -65,6 +66,12 @@ class SettingFragment : Fragment(R.layout.setting_fragment) {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_BLE_ENABLE) {
+            if (bluetoothAdapter?.isEnabled == true && !scanning) startScanning()
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DataBindingUtil.bind<SettingFragmentBinding>(view)?.apply {
@@ -75,13 +82,19 @@ class SettingFragment : Fragment(R.layout.setting_fragment) {
         initView()
         setObserver()
 
-        if (!scanning) startScanning()
+        if (bluetoothAdapter?.isEnabled == false) {
+            val intent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(intent, REQUEST_BLE_ENABLE)
+        } else {
+            if (!scanning) startScanning()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
         stopScanning()
+        disposable?.dispose()
     }
 
     private fun initView() {
@@ -120,7 +133,7 @@ class SettingFragment : Fragment(R.layout.setting_fragment) {
             return
         }
 
-        Completable.fromAction {
+        disposable = Completable.fromAction {
             scanning = true
             scanner?.startScan(scanCallback)
 
@@ -144,6 +157,7 @@ class SettingFragment : Fragment(R.layout.setting_fragment) {
 
     private companion object {
         const val TAG = "SettingFragment"
+        const val REQUEST_BLE_ENABLE = 123
 
         const val SCAN_PERIOD = 45000L
     }
