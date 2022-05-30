@@ -31,6 +31,7 @@ class WirelessTagFragment : Fragment(R.layout.wireless_tag_fragment) {
         }
 
         initView()
+
     }
 
     private fun initView() {
@@ -47,5 +48,9 @@ class WirelessTagFragment : Fragment(R.layout.wireless_tag_fragment) {
         val display = windowManager.defaultDisplay
         val size = Point()
         display.getSize(size)
+
+        binding?.setButton?.setOnClickListener {
+            UserSetDialogFragment(size.x, beaconViewModel).show(childFragmentManager, "UserSetDialog")
+        }
     }
 }
