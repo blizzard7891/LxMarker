@@ -77,6 +77,7 @@ class ActivityViewModel @Inject constructor(
                             viewItem.connected.postValue(true)
                             gatt.discoverServices()
                         } else {
+                            viewEvent.postValue(ViewEvent.BleDisconnected)
                             viewItem.connected.postValue(false)
                         }
                     }
