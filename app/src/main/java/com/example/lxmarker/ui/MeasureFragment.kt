@@ -11,6 +11,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation.INFINITE
@@ -34,6 +36,10 @@ import java.util.concurrent.TimeUnit
 
 class MeasureFragment : Fragment(R.layout.measure_fragment) {
 
+    private enum class UsbPermission {
+        Unknown, Requested, Granted, Denied
+    }
+
     private var binding: MeasureFragmentBinding? = null
     private val viewModel: ActivityViewModel by viewModels({ requireActivity() })
     private val measureViewModel: MeasureViewModel by viewModels()
@@ -45,12 +51,15 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
 
     private var readDisposable: Disposable? = null
     private var cmdDisposable: Disposable? = null
+    private var usbPermission = UsbPermission.Unknown
+    private val mainHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
 
     private val permissionReceiver: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (intent.action == INTENT_ACTION_GRANT_USB) {
-                    connect()
+                    usbPermission = if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) UsbPermission.Granted else UsbPermission.Denied
+                    connectSerialPort()
                 }
             }
         }
@@ -60,34 +69,7 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
         super.onCreate(savedInstanceState)
         viewModel.selectedScanItem.value?.let(measureViewModel::setItem)
         viewModel.connectDevice()
-        connect()
     }
-
-    override fun onDestroy() {
-        viewModel.disConnectGatt()
-        cmdDisposable?.dispose()
-        super.onDestroy()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        activity?.registerReceiver(permissionReceiver, IntentFilter(INTENT_ACTION_GRANT_USB))
-        readDisposable = read().subscribe({
-            if (!connected) return@subscribe
-            val port = usbSerialPort ?: return@subscribe
-
-            readBuffer(port)
-        }, {
-            Log.e(TAG, "$it")
-        })
-    }
-
-    override fun onPause() {
-        super.onPause()
-        activity?.unregisterReceiver(permissionReceiver)
-        readDisposable?.dispose()
-    }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -100,15 +82,48 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
         setObserver()
     }
 
+    override fun onDestroy() {
+        viewModel.disConnectGatt()
+        cmdDisposable?.dispose()
+        super.onDestroy()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.registerReceiver(permissionReceiver, IntentFilter(INTENT_ACTION_GRANT_USB))
+        readDisposable = Observable.interval(1, TimeUnit.SECONDS)
+            .subscribeOn(Schedulers.io())
+            .subscribe({
+                Log.d(TAG, "READ: $connected, $usbSerialPort")
+                if (!connected) return@subscribe
+                val port = usbSerialPort ?: return@subscribe
+
+                readBuffer(port)
+            }, {
+                Log.e(TAG, "$it")
+            })
+
+        if(usbPermission == UsbPermission.Unknown || usbPermission == UsbPermission.Granted) {
+            mainHandler.post(::connectSerialPort)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.unregisterReceiver(permissionReceiver)
+        if (connected) disConnectSerialPort()
+        readDisposable?.dispose()
+    }
 
     private fun setObserver() {
         viewModel.gattServiceDiscovered.observe(viewLifecycleOwner) {
             if (it) {
-                cmdDisposable = Observable.interval(1, TimeUnit.SECONDS)
+                cmdDisposable = Observable.interval(3, TimeUnit.SECONDS)
+                    .doOnSubscribe { viewModel.sendStartCmd() }
                     .subscribe({
-                        viewModel.sendStartCmd()
+                        viewModel.sendContinueCmd()
                     }, {
-                        Log.e(TAG, "$it")
+                        Log.e(TAG, "sendStartCmd error: $it")
                     })
             }
         }
@@ -131,7 +146,7 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
         binding = null
     }
 
-    private fun connect() {
+    private fun connectSerialPort() {
         val table = ProbeTable()
         table.addProduct(0x0000, 0x0000, CdcAcmSerialDriver::class.java)
         val availableDrivers = UsbSerialProber(table).findAllDrivers(usbManager)
@@ -150,40 +165,45 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
         }
 
         val driver = selectedDriver
-
         if (driver == null) {
             Log.d(TAG, "driver is null")
             return
         }
+        // Most devices have just one port(port 0)
+        val port = driver.ports[0]
 
-        val connection = usbManager.openDevice(driver.device)
-        if (connection == null && !usbManager.hasPermission(driver.device)) {
-            Log.d(TAG, "connection is null")
+        val usbConnection = usbManager.openDevice(driver.device)
+        if (usbConnection == null && usbPermission == UsbPermission.Unknown && !usbManager.hasPermission(driver.device)) {
+            usbPermission = UsbPermission.Requested
+            Log.e(TAG, "connection is null and had no permission")
             val usbPermissionIntent = PendingIntent.getBroadcast(activity, 0, Intent(INTENT_ACTION_GRANT_USB), PendingIntent.FLAG_IMMUTABLE)
             usbManager.requestPermission(driver.device, usbPermissionIntent)
             return
-        } else if (connection == null) {
+        } else if (usbConnection == null) {
             Toast.makeText(context, R.string.connection_open_failed, Toast.LENGTH_SHORT).show()
-            Log.d(TAG, "connection failed: open failed")
+            Log.e(TAG, "connection failed: open failed")
             return
         }
 
-        // Most devices have just one port(port 0)
-        val port = driver.ports[0]
         try {
-            port.open(connection)
+            port.open(usbConnection)
             port.setParameters(115200, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE)
             usbSerialPort = port
             connected = true
         } catch (e: IOException) {
             Toast.makeText(context, R.string.connection_open_failed, Toast.LENGTH_SHORT).show()
-            Log.e(TAG, "$e")
+            Log.e(TAG, "usbSerial error: $e")
         }
     }
 
-    private fun read(): Observable<Long> {
-        return Observable.interval(1, TimeUnit.SECONDS)
-            .subscribeOn(Schedulers.io())
+    private fun disConnectSerialPort() {
+        Log.i(TAG, "disConnectSerialPort")
+        connected = false
+        try {
+            usbSerialPort?.close()
+        } catch (e: IOException) {
+            usbSerialPort = null
+        }
     }
 
     private fun readBuffer(port: UsbSerialPort) {
@@ -197,7 +217,8 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
                 measureViewModel.setReadByteArray(readBuffer)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "$e")
+            Log.e(TAG, "readBuffer error: ${e.message}")
+            disConnectSerialPort()
         }
     }
 
@@ -211,7 +232,6 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
             findNavController().popBackStack(R.id.measureFragment, true)
             findNavController().navigate(R.id.settingFragment)
         }
-
 
         val alpha = PropertyValuesHolder.ofFloat(View.ALPHA, 1f, 0f)
         val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0.3f, 1f)
@@ -248,6 +268,6 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
     private companion object {
         const val TAG = "MeasureFragment"
         const val INTENT_ACTION_GRANT_USB: String = BuildConfig.APPLICATION_ID + ".GRANT_USB"
-        const val READ_WAIT_MILLIS = 300
+        const val READ_WAIT_MILLIS = 1000
     }
 }

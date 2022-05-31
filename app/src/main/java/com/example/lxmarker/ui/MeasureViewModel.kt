@@ -29,35 +29,36 @@ class MeasureViewModel @Inject constructor(app: Application) : AndroidViewModel(
         var currentIndex = stxIndex
         //  uint8_t stx;
         val stx = byteArray.copyOfRange(currentIndex, currentIndex.inc())
-        Log.d(TAG, "stx: ${stx.toHexString()}")
+//        Log.d(TAG, "stx: ${stx.toHexString()}")
         currentIndex++
         //	uint8_t select;
         val select = byteArray.copyOfRange(currentIndex, currentIndex.inc())
-        Log.d(TAG, "select: ${select.toHexString()}")
+//        Log.d(TAG, "select: ${select.toHexString()}")
+        if (select.firstOrNull() != 0x00.toByte()) return
         currentIndex++
         //	uint16_t distance;
         val distance = byteArray.copyOfRange(currentIndex, currentIndex + 2)
-        Log.d(TAG, "distance: ${distance.toHexString()}, ${distance.toLittleEndian()}")
+        Log.d(TAG, "distance: ${distance.toHexString()}, littleEndian: ${distance.toLittleEndian()}")
         currentIndex += 2
         //	uint8_t  etc[8];
         val etc = byteArray.copyOfRange(currentIndex, currentIndex + 8)
-        Log.d(TAG, "etc: ${etc.toHexString()}")
+//        Log.d(TAG, "etc: ${etc.toHexString()}")
         currentIndex += 8
         //	int16_t x_axis;
         val xAxis = byteArray.copyOfRange(currentIndex, currentIndex + 2)
-        Log.d(TAG, "xAxis: ${xAxis.toHexString()}")
+//        Log.d(TAG, "xAxis: ${xAxis.toHexString()}")
         currentIndex += 2
         //	int16_t y_axis;
         val yAxis = byteArray.copyOfRange(currentIndex, currentIndex + 2)
-        Log.d(TAG, "yAxis: ${yAxis.toHexString()}")
+//        Log.d(TAG, "yAxis: ${yAxis.toHexString()}")
         currentIndex += 2
         //	int16_t z_axis;
         val zAxis = byteArray.copyOfRange(currentIndex, currentIndex + 2)
-        Log.d(TAG, "zAxis: ${zAxis.toHexString()}")
+//        Log.d(TAG, "zAxis: ${zAxis.toHexString()}")
         currentIndex += 2
         //	uint8_t etx;
         val etx = byteArray.copyOfRange(currentIndex, currentIndex.inc())
-        Log.d(TAG, "etx: ${etx.toHexString()}")
+//        Log.d(TAG, "etx: ${etx.toHexString()}")
 
         if (select.firstOrNull() == 0x00.toByte()) {
             this.distance.postValue(distance.toLittleEndian() / 100f)

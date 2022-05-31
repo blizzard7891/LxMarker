@@ -51,6 +51,8 @@ class ActivityViewModel @Inject constructor(
 
     fun setScanResult(result: ScanResult) {
         val viewItem = mapToScanResultItem(result)
+        if (scanResult.value?.map(ScanResultItem::scanResult)?.contains(result) == true) return
+
         scanResult.value = listOf(viewItem)
     }
 
@@ -76,7 +78,7 @@ class ActivityViewModel @Inject constructor(
                             Log.d(TAG, "connected to GATT server")
                             viewItem.connected.postValue(true)
                             gatt.discoverServices()
-                        } else {
+                        } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                             viewEvent.postValue(ViewEvent.BleDisconnected)
                             viewItem.connected.postValue(false)
                         }
@@ -117,7 +119,7 @@ class ActivityViewModel @Inject constructor(
                         if (characteristic.uuid == Constants.Battery_Characteristic_UUID) {
                             val battery = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0)
                             parseBleRawData(viewItem.scanResult, battery)
-                        } else{
+                        } else {
                             readBattery(gatt)
                             cyclePeriod.postValue(CyclePeriod.convertFromString(value))
                         }
@@ -222,44 +224,44 @@ class ActivityViewModel @Inject constructor(
         var currentIndex = stxIndex
         //  uint8_t stx;
         val stx = byteArray.copyOfRange(currentIndex, currentIndex.inc())
-        Log.d(TAG, "stx: ${stx.toHexString()}")
+//        Log.d(TAG, "stx: ${stx.toHexString()}")
         currentIndex++
         //	uint8_t select;
         val select = byteArray.copyOfRange(currentIndex, currentIndex.inc())
-        Log.d(TAG, "select: ${select.toHexString()}")
+//        Log.d(TAG, "select: ${select.toHexString()}")
         currentIndex++
         //	uint16_t etc;
         val etc = byteArray.copyOfRange(currentIndex, currentIndex + 2)
-        Log.d(TAG, "etc: ${etc.toHexString()}")
+//        Log.d(TAG, "etc: ${etc.toHexString()}")
         currentIndex += 2
         //	uint8_t  imei[8];
         val imei = byteArray.copyOfRange(currentIndex, currentIndex + 8)
-        Log.d(TAG, "imei: ${imei.toHexString()}")
+//        Log.d(TAG, "imei: ${imei.toHexString()}")
         currentIndex += 8
         //	int16_t x_axis;
         val xAxis = byteArray.copyOfRange(currentIndex, currentIndex + 2).toLittleEndian().toDouble()
-        Log.d(TAG, "xAxis: ${xAxis}")
+//        Log.d(TAG, "xAxis: ${xAxis}")
 
         currentIndex += 2
         //	int16_t y_axis;
         val yAxis = byteArray.copyOfRange(currentIndex, currentIndex + 2).toLittleEndian().toDouble()
-        Log.d(TAG, "yAxis: ${yAxis}")
+//        Log.d(TAG, "yAxis: ${yAxis}")
 
         currentIndex += 2
         //	int16_t z_axis;
         val zAxis = byteArray.copyOfRange(currentIndex, currentIndex + 2).toLittleEndian().toDouble()
-        Log.d(TAG, "zAxis: ${zAxis}")
+//        Log.d(TAG, "zAxis: ${zAxis}")
 
         currentIndex += 2
         //	uint8_t etx;
         val etx = byteArray.copyOfRange(currentIndex, currentIndex.inc())
-        Log.d(TAG, "etx: ${etx.toHexString()}")
+//        Log.d(TAG, "etx: ${etx.toHexString()}")
 
         val accX = atan(yAxis / sqrt(xAxis.pow(2) + zAxis.pow(2))) * RADIAN_TO_DEGREE
         val accY = atan((-xAxis) / sqrt(yAxis.pow(2) + zAxis.pow(2))) * RADIAN_TO_DEGREE
         val accZ = atan(zAxis / sqrt((-xAxis).pow(2) + yAxis.pow(2))) * RADIAN_TO_DEGREE
 
-        Log.d(TAG, "accX: $accX, accY: $accY, accZ: $accZ")
+//        Log.d(TAG, "accX: $accX, accY: $accY, accZ: $accZ")
 
         val entity = CheckIn(
             time = getDateString(),

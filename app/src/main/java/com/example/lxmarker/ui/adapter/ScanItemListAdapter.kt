@@ -37,7 +37,7 @@ class ScanItemListAdapter(
 
     object ItemDIffCallback : DiffUtil.ItemCallback<ScanResultItem>() {
         override fun areItemsTheSame(oldItem: ScanResultItem, newItem: ScanResultItem): Boolean {
-            return oldItem == newItem
+            return oldItem.scanResult.device.address == newItem.scanResult.device.address
         }
 
         override fun areContentsTheSame(oldItem: ScanResultItem, newItem: ScanResultItem): Boolean {
