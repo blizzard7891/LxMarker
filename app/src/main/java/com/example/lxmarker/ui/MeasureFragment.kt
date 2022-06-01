@@ -28,12 +28,14 @@ import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.databinding.MeasureFragmentBinding
 import com.example.lxmarker.util.HexDump
 import com.hoho.android.usbserial.driver.*
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
+@AndroidEntryPoint
 class MeasureFragment : Fragment(R.layout.measure_fragment) {
 
     private enum class UsbPermission {
@@ -94,7 +96,7 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
         readDisposable = Observable.interval(1, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .subscribe({
-                Log.d(TAG, "READ: $connected, $usbSerialPort")
+//                Log.d(TAG, "READ: $connected, $usbSerialPort")
                 if (!connected) return@subscribe
                 val port = usbSerialPort ?: return@subscribe
 
@@ -103,7 +105,7 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
                 Log.e(TAG, "$it")
             })
 
-        if(usbPermission == UsbPermission.Unknown || usbPermission == UsbPermission.Granted) {
+        if (usbPermission == UsbPermission.Unknown || usbPermission == UsbPermission.Granted) {
             mainHandler.post(::connectSerialPort)
         }
     }
@@ -151,7 +153,7 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
         table.addProduct(0x0000, 0x0000, CdcAcmSerialDriver::class.java)
         val availableDrivers = UsbSerialProber(table).findAllDrivers(usbManager)
         if (availableDrivers.isEmpty()) {
-            Log.d(TAG, "availableDrivers empty")
+            Log.e(TAG, "availableDrivers empty")
             return
         }
 
@@ -166,28 +168,41 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
 
         val driver = selectedDriver
         if (driver == null) {
-            Log.d(TAG, "driver is null")
+            Log.e(TAG, "driver is null")
+            return
+        }
+        val device = driver.device
+        if (device == null) {
+            Log.e(TAG, "device is null")
             return
         }
         // Most devices have just one port(port 0)
         val port = driver.ports[0]
 
-        val usbConnection = usbManager.openDevice(driver.device)
-        if (usbConnection == null && usbPermission == UsbPermission.Unknown && !usbManager.hasPermission(driver.device)) {
+        val usbConnection = usbManager.openDevice(device)
+        if (usbConnection == null && usbPermission == UsbPermission.Unknown && !usbManager.hasPermission(device)) {
             usbPermission = UsbPermission.Requested
             Log.e(TAG, "connection is null and had no permission")
             val usbPermissionIntent = PendingIntent.getBroadcast(activity, 0, Intent(INTENT_ACTION_GRANT_USB), PendingIntent.FLAG_IMMUTABLE)
-            usbManager.requestPermission(driver.device, usbPermissionIntent)
+            usbManager.requestPermission(device, usbPermissionIntent)
             return
-        } else if (usbConnection == null) {
-            Toast.makeText(context, R.string.connection_open_failed, Toast.LENGTH_SHORT).show()
-            Log.e(TAG, "connection failed: open failed")
+        }
+        if (usbConnection == null) {
+            if (!usbManager.hasPermission(device)) {
+                Toast.makeText(context, R.string.connection_permission_denied, Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "connection failed: permission denied")
+            } else {
+                Toast.makeText(context, R.string.connection_open_failed, Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "connection failed: open failed")
+            }
             return
         }
 
         try {
             port.open(usbConnection)
-            port.setParameters(115200, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE)
+            port.setParameters(19200, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE)
+            port.dtr = true
+
             usbSerialPort = port
             connected = true
         } catch (e: IOException) {
@@ -208,12 +223,12 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
 
     private fun readBuffer(port: UsbSerialPort) {
         try {
-            val buffer = ByteArray(8192)
+            val buffer = ByteArray(1024)
             val len = port.read(buffer, READ_WAIT_MILLIS)
             val readBuffer = buffer.copyOf(len)
 
             if (len != 0) {
-                Log.d(TAG, "read:[$len] ${HexDump.dumpHexString(readBuffer)}")
+//                Log.d(TAG, "read:[$len] ${HexDump.dumpHexString(readBuffer)}")
                 measureViewModel.setReadByteArray(readBuffer)
             }
         } catch (e: Exception) {
@@ -268,6 +283,6 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
     private companion object {
         const val TAG = "MeasureFragment"
         const val INTENT_ACTION_GRANT_USB: String = BuildConfig.APPLICATION_ID + ".GRANT_USB"
-        const val READ_WAIT_MILLIS = 1000
+        const val READ_WAIT_MILLIS = 500
     }
 }

@@ -26,10 +26,12 @@
     <string name="not_bonded">not bonded</string>
     <string name="period_set_complete">전송 주기가 변경되었습니다.</string>
     <string name="connection_open_failed">connection failed: open failed.</string>
+    <string name="connection_permission_denied">connection failed: permission failed.</string>
     <string name="connection_distance">%ddBm</string>
     <string name="acceleration_text">X:%s\nY:%s\nZ:%s</string>
     <string name="battery_level">%d%%</string>
     <string name="connection_alert_title">LX MARKER커넥션 해제</string>
     <string name="connection_alert_message">LX MARKER와 연결이 해제되었습니다.</string>
     <string name="connection_alert_button">확인</string>
+    <string name="disconnect_usb_serial_connection">disconnect usb serial connection.</string>
 </resources>

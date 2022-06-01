@@ -5,4 +5,5 @@ sealed class ViewEvent {
     object Cycle: ViewEvent()
     object CycleChangeComplete: ViewEvent()
     object BleDisconnected: ViewEvent()
+    object UserNameSet: ViewEvent()
 }

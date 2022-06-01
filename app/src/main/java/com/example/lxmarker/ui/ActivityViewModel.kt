@@ -218,6 +218,7 @@ class ActivityViewModel @Inject constructor(
     }
 
     private fun parseBleRawData(result: ScanResult, battery: Int) {
+        result.scanRecord
         val byteArray = result.scanRecord!!.bytes
         val stxIndex = byteArray.withIndex().find { (_, byte) -> byte == BLE_VALUE_STX }?.index ?: return
 

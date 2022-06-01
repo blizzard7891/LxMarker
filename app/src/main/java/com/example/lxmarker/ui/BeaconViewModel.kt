@@ -4,31 +4,30 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.provider.Settings
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
-import java.net.NetworkInterface
-import java.util.*
+import androidx.lifecycle.*
+import com.example.lxmarker.data.ViewEvent
+import com.hadilq.liveevent.LiveEvent
 import javax.inject.Inject
 
 class BeaconViewModel @Inject constructor(context: Application) : AndroidViewModel(context) {
 
-    val address: MutableLiveData<String> = MutableLiveData("00:00:00:00:00:00")
+    val address: MutableLiveData<String> = MutableLiveData("")
 
     private val _userName: MutableLiveData<String> = MutableLiveData("")
     val userName: LiveData<String> = _userName.map { if (it.isNullOrEmpty()) "이름 없음" else it }
 
+    val advertiseData: LiveData<ByteArray> = MediatorLiveData<ByteArray>().apply {
+        addSource(address) { if (canAdvertise()) value = getAdvertiseData() }
+        addSource(_userName) { if (canAdvertise()) value = getAdvertiseData() }
+    }.distinctUntilChanged()
+
+    val viewEvent: MutableLiveData<ViewEvent> = LiveEvent()
+
     private val sharedPref by lazy { getApplication<Application>().getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE) }
 
     fun init() {
-        initMacAddress()
+        initUserId()
         initUserName()
-    }
-
-    private fun initUserName() {
-        _userName.value = sharedPref.getString(KEY_USER_NAME, "")
     }
 
     fun saveUserName(name: String) {
@@ -36,41 +35,34 @@ class BeaconViewModel @Inject constructor(context: Application) : AndroidViewMod
         initUserName()
     }
 
-    private fun initMacAddress() {
-//        address.value = getMacAddress().also {
-//            Log.d(TAG, "mac: $it")
-//        }
+    private fun initUserId() {
         address.value = getAndroidId()
+    }
+
+    private fun initUserName() {
+        _userName.value = sharedPref.getString(KEY_USER_NAME, "")?.also {
+            if (it.isEmpty()) viewEvent.value = ViewEvent.UserNameSet
+        }
     }
 
     @SuppressLint("HardwareIds")
     private fun getAndroidId(): String {
-        return Settings.Secure.getString(getApplication<Application>().contentResolver, Settings.Secure.ANDROID_ID)
+        return String
+            .format("%16s", Settings.Secure.getString(getApplication<Application>().contentResolver, Settings.Secure.ANDROID_ID))
+            .replace(' ', '0')
     }
 
-    private fun getMacAddress(): String {
-        val all: List<NetworkInterface> = Collections.list(NetworkInterface.getNetworkInterfaces())
-        for (nif in all) {
-            Log.d(TAG, "nif name: ${nif.name}")
+    private fun canAdvertise(): Boolean {
+        return !address.value.isNullOrEmpty() && !_userName.value.isNullOrEmpty()
+    }
 
-            if (!nif.name.equals("rmnet_data0", ignoreCase = true)) continue
-            Log.d(TAG, "nif2 name: ${nif.name}, ${nif.hardwareAddress}")
+    private fun getAdvertiseData(): ByteArray {
+        val userId = address.value.orEmpty()
+        val userName = userName.value.orEmpty()
 
-            val macBytes: ByteArray = nif.hardwareAddress ?: return ""
-            val res1 = StringBuilder()
-
-
-
-            for (b in macBytes) {
-                res1.append(String.format("%02X", b))
-            }
-            if (res1.isNotEmpty()) {
-                res1.deleteCharAt(res1.length - 1)
-            }
-            return res1.toString()
-        }
-
-        return ""
+        val userIdByteArray = userId.toByteArray().copyOf(16)
+        val userNameByteArray = userName.toByteArray().copyOf(8)
+        return userIdByteArray + userNameByteArray
     }
 
     private companion object {

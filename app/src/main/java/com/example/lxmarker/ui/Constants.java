@@ -32,18 +32,16 @@ public class Constants {
      * The official specification can be found here:
      * {@link https://www.bluetooth.org/en-us/specification/assigned-numbers/service-discovery}
      */
-    public static final ParcelUuid Service_UUID = ParcelUuid  ////이건필용벗음
-            //.fromString("40010000-0359-6890-9611-71603900b4ff");
-            .fromString("0000180f-0000-1000-8000-00805f9b34fb");
-    //.fromString("6e40ffc0-b53a-3f93-e0a9-e50e24dcca9e");
+    public static final ParcelUuid Service_UUID = ParcelUuid
+            .fromString("6a36ff63-59e8-4971-8379-9e22f7a9fefb");
+    public static final ParcelUuid Advertise_Data1_UUID = ParcelUuid
+            .fromString("00008961-0000-1000-8000-00805f9b34fb");
     public static final UUID Characteristic_UUID = UUID.
             fromString("6e40ffc0-b53a-3f93-e0a9-e50e24dcca9e");
     public static final UUID Battery_Service_UUID = UUID
             .fromString("0000180f-0000-1000-8000-00805f9b34fb");
     public static final UUID Battery_Characteristic_UUID = UUID
             .fromString("00002a19-0000-1000-8000-00805f9b34fb");
-
-    public static final int REQUEST_ENABLE_BT = 1;
 
     public static final int DIST_CMD_CHAR_IDX = 0;
     public static final int CYCLE_CMD_CHAR_IDX = 1;

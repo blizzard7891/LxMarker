@@ -1,6 +1,8 @@
 package com.example.lxmarker.ui.dialog
 
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.example.lxmarker.R
 import com.example.lxmarker.ui.BeaconViewModel
+import java.util.regex.Pattern
 
 class UserSetDialogFragment(
     private val screenWidth: Int,
@@ -19,7 +22,18 @@ class UserSetDialogFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userNameEditText = view.findViewById<EditText>(R.id.user_edit_text)
+        val userNameEditText = view.findViewById<EditText>(R.id.user_edit_text).apply {
+            filters = arrayOf(
+                InputFilter.LengthFilter(8),
+                object : InputFilter {
+                    override fun filter(source: CharSequence, start: Int, end: Int, dest: Spanned?, dstart: Int, dend: Int): CharSequence? {
+                        val ps = Pattern.compile("^[a-zA-Z0-9]+$")
+                        if (!ps.matcher(source).matches()) return ""
+                        return null
+                    }
+                }
+            )
+        }
         view.findViewById<Button>(R.id.positive_button)?.apply {
             setOnClickListener {
                 viewModel.saveUserName(userNameEditText.text.toString())
