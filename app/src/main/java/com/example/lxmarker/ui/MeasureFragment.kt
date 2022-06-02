@@ -120,7 +120,8 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
     private fun setObserver() {
         viewModel.gattServiceDiscovered.observe(viewLifecycleOwner) {
             if (it) {
-                cmdDisposable = Observable.interval(3, TimeUnit.SECONDS)
+                cmdDisposable = Observable.timer(2, TimeUnit.SECONDS)
+                    .repeat(5)
                     .doOnSubscribe { viewModel.sendStartCmd() }
                     .subscribe({
                         viewModel.sendContinueCmd()

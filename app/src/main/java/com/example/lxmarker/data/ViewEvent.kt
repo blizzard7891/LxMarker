@@ -6,4 +6,5 @@ sealed class ViewEvent {
     object CycleChangeComplete: ViewEvent()
     object BleDisconnected: ViewEvent()
     object UserNameSet: ViewEvent()
+    class CheckInFound(val item: CheckIn): ViewEvent()
 }

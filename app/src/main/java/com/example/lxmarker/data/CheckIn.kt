@@ -10,9 +10,20 @@ data class CheckIn(
     val markerNum: String,
     val x: String,
     val y: String,
-    val z: String,
-    val battery: Int
+    val z: String
 ) {
     val idText: String
         get() = id.toString()
+
+    val timeFormatText: String
+        get() {
+            val middle = time.length / 2
+            return time.substring(0, middle) + "\n" + time.substring(middle, time.length)
+        }
+
+    val markerNumFormatText: String
+        get() {
+            val middle = markerNum.length / 2
+            return markerNum.substring(0, middle) + "\n" + markerNum.substring(middle, markerNum.length)
+        }
 }

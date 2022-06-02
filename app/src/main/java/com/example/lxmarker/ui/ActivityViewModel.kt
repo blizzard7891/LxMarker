@@ -118,7 +118,7 @@ class ActivityViewModel @Inject constructor(
 
                         if (characteristic.uuid == Constants.Battery_Characteristic_UUID) {
                             val battery = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0)
-                            parseBleRawData(viewItem.scanResult, battery)
+//                            parseBleRawData(viewItem.scanResult, battery)
                         } else {
                             readBattery(gatt)
                             cyclePeriod.postValue(CyclePeriod.convertFromString(value))
@@ -269,8 +269,7 @@ class ActivityViewModel @Inject constructor(
             markerNum = result.device.address.substring(0, 8) + "\n" + result.device.address.substring(8),
             x = String.format("%.2f", accX),
             y = String.format("%.2f", accY),
-            z = String.format("%.2f", accZ),
-            battery = battery
+            z = String.format("%.2f", accZ)
         )
 
         Completable.fromAction {

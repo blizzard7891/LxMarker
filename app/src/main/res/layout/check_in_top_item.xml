@@ -9,7 +9,7 @@
         <TextView
             android:id="@+id/order"
             style="@style/table_text_view_header"
-            android:layout_width="0dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:text="순번"
             app:layout_constraintEnd_toStartOf="@id/time"
@@ -43,19 +43,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="가속도"
-            app:layout_constraintEnd_toStartOf="@id/battery"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/marker_number"
             app:layout_constraintTop_toTopOf="@id/order" />
 
-        <TextView
-            android:id="@+id/battery"
-            style="@style/table_text_view_header"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="배터리"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/acceleration"
-            app:layout_constraintTop_toTopOf="@id/order" />
+<!--        <TextView-->
+<!--            android:id="@+id/battery"-->
+<!--            style="@style/table_text_view_header"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="배터리"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@id/acceleration"-->
+<!--            app:layout_constraintTop_toTopOf="@id/order" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
