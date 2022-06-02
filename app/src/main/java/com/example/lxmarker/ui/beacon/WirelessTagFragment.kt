@@ -99,6 +99,7 @@ class WirelessTagFragment : Fragment(R.layout.wireless_tag_fragment) {
         bleAdvertiser.startAdvertising(
             buildAdvertiseSettings(),
             buildAdvertiseData(data),
+            buildScanResponse(),
             advertiseCallback
         )
     }
@@ -117,9 +118,14 @@ class WirelessTagFragment : Fragment(R.layout.wireless_tag_fragment) {
 
     private fun buildAdvertiseData(data: ByteArray): AdvertiseData {
         return AdvertiseData.Builder()
-            .setIncludeDeviceName(true)
 //            .addServiceUuid(Constants.Service_UUID)
             .addServiceData(Constants.Advertise_Data1_UUID, data)
+            .build()
+    }
+
+    private fun buildScanResponse(): AdvertiseData {
+        return AdvertiseData.Builder()
+            .setIncludeDeviceName(true)
             .build()
     }
 
