@@ -90,21 +90,14 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
         super.onDestroy()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
     override fun onResume() {
         super.onResume()
         activity?.registerReceiver(permissionReceiver, IntentFilter(INTENT_ACTION_GRANT_USB))
-        readDisposable = Observable.interval(1, TimeUnit.SECONDS)
-            .subscribeOn(Schedulers.io())
-            .subscribe({
-//                Log.d(TAG, "READ: $connected, $usbSerialPort")
-                if (!connected) return@subscribe
-                val port = usbSerialPort ?: return@subscribe
-
-                readBuffer(port)
-            }, {
-                Log.e(TAG, "$it")
-            })
-
         if (usbPermission == UsbPermission.Unknown || usbPermission == UsbPermission.Granted) {
             mainHandler.post(::connectSerialPort)
         }
@@ -114,17 +107,15 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
         super.onPause()
         activity?.unregisterReceiver(permissionReceiver)
         if (connected) disConnectSerialPort()
-        readDisposable?.dispose()
     }
 
     private fun setObserver() {
         viewModel.gattServiceDiscovered.observe(viewLifecycleOwner) {
             if (it) {
-                cmdDisposable = Observable.timer(2, TimeUnit.SECONDS)
-                    .repeat(5)
+                cmdDisposable = Observable.interval(2, TimeUnit.SECONDS)
                     .doOnSubscribe { viewModel.sendStartCmd() }
                     .subscribe({
-                        viewModel.sendContinueCmd()
+                        viewModel.sendStartCmd()
                     }, {
                         Log.e(TAG, "sendStartCmd error: $it")
                     })
@@ -142,11 +133,6 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
                     .show()
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
     }
 
     private fun connectSerialPort() {
@@ -210,16 +196,34 @@ class MeasureFragment : Fragment(R.layout.measure_fragment) {
             Toast.makeText(context, R.string.connection_open_failed, Toast.LENGTH_SHORT).show()
             Log.e(TAG, "usbSerial error: $e")
         }
+
+        readUsbSerial()
     }
 
     private fun disConnectSerialPort() {
         Log.i(TAG, "disConnectSerialPort")
         connected = false
         try {
-            usbSerialPort?.close()
+            usbSerialPort?.run {
+                dtr = false
+                close()
+            }
         } catch (e: IOException) {
             usbSerialPort = null
         }
+        readDisposable?.dispose()
+    }
+
+    private fun readUsbSerial() {
+        readDisposable = Observable.interval(500, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .subscribe({
+                if (!connected) return@subscribe
+                val port = usbSerialPort ?: return@subscribe
+                readBuffer(port)
+            }, {
+                Log.e(TAG, "$it")
+            })
     }
 
     private fun readBuffer(port: UsbSerialPort) {

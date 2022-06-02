@@ -9,6 +9,7 @@ import androidx.lifecycle.map
 import com.example.lxmarker.data.ScanResultItem
 import com.example.lxmarker.util.ByteArray.toHexString
 import com.example.lxmarker.util.ByteArray.toLittleEndian
+import com.example.lxmarker.util.ByteArray.toUnsignedLittleEndian
 import javax.inject.Inject
 
 class MeasureViewModel @Inject constructor(app: Application) : AndroidViewModel(app) {
@@ -38,7 +39,7 @@ class MeasureViewModel @Inject constructor(app: Application) : AndroidViewModel(
         currentIndex++
         //	uint16_t distance;
         val distance = byteArray.copyOfRange(currentIndex, currentIndex + 2)
-        Log.d(TAG, "distance: ${distance.toHexString()}, littleEndian: ${distance.toLittleEndian()}")
+        Log.d(TAG, "distance: ${distance.toHexString()}, toUnsignedLittleEndian: ${distance.toUnsignedLittleEndian()}")
         currentIndex += 2
         //	uint8_t  etc[8];
         val etc = byteArray.copyOfRange(currentIndex, currentIndex + 8)
@@ -61,7 +62,7 @@ class MeasureViewModel @Inject constructor(app: Application) : AndroidViewModel(
 //        Log.d(TAG, "etx: ${etx.toHexString()}")
 
         if (select.firstOrNull() == 0x00.toByte()) {
-            this.distance.postValue(distance.toLittleEndian() / 100f)
+            this.distance.postValue(distance.toUnsignedLittleEndian().toFloat() / 100f)
         }
     }
 

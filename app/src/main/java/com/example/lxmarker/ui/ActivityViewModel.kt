@@ -13,7 +13,6 @@ import com.example.lxmarker.data.CyclePeriod
 import com.example.lxmarker.data.ScanResultItem
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.data.repository.MarkerRepository
-import com.example.lxmarker.util.ByteArray.toHexString
 import com.example.lxmarker.util.ByteArray.toLittleEndian
 import com.hadilq.liveevent.LiveEvent
 import com.hadilq.liveevent.LiveEventConfig
@@ -163,21 +162,6 @@ class ActivityViewModel @Inject constructor(
         }
     }
 
-    fun sendContinueCmd() {
-        val viewItem = selectedScanItem.value ?: return
-        val gatt = viewItem.gatt ?: return
-        val gattService = viewItem.getGattService() ?: return
-        Log.d(TAG, "sendContinueCmd")
-
-        val characteristic = gattService.characteristics[Constants.DIST_CMD_CHAR_IDX].apply {
-            setValue(Constants.CMD_BLE_CONTINUE)
-            writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-        }
-        gatt.writeCharacteristic(characteristic).also {
-            Log.d(TAG, "writeCharacteristic: $it, ${characteristic.uuid}")
-        }
-    }
-
     fun setCycleSetting(period: CyclePeriod) {
         val viewItem = selectedScanItem.value ?: return
         val gatt = viewItem.gatt ?: return
@@ -266,7 +250,7 @@ class ActivityViewModel @Inject constructor(
 
         val entity = CheckIn(
             time = getDateString(),
-            markerNum = result.device.address.substring(0, 8) + "\n" + result.device.address.substring(8),
+            imei = result.device.address.substring(0, 8) + "\n" + result.device.address.substring(8),
             x = String.format("%.2f", accX),
             y = String.format("%.2f", accY),
             z = String.format("%.2f", accZ)

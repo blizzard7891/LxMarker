@@ -1,15 +1,17 @@
 package com.example.lxmarker.util
 
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import kotlin.ByteArray
 
 object ByteArray {
 
-    fun ByteArray.toLittleEndian(): Int {
-        var result = 0
-        for (i in this.indices) {
-            result = result or (this[i].toInt() shl 8 * i)
-        }
-        return result
+    fun ByteArray.toLittleEndian(): Short {
+        return ByteBuffer.wrap(this).order(ByteOrder.LITTLE_ENDIAN).short
+    }
+
+    fun ByteArray.toUnsignedLittleEndian(): UShort {
+        return ByteBuffer.wrap(this).order(ByteOrder.LITTLE_ENDIAN).short.toUShort()
     }
 
     fun ByteArray.toInt(): Int {

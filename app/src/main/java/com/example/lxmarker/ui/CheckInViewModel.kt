@@ -3,13 +3,13 @@ package com.example.lxmarker.ui
 import android.annotation.SuppressLint
 import android.bluetooth.le.ScanResult
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.lxmarker.data.CheckIn
 import com.example.lxmarker.data.CheckInItem
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.data.repository.MarkerRepository
+import com.example.lxmarker.util.ByteArray.toHexString
 import com.example.lxmarker.util.ByteArray.toLittleEndian
 import com.hadilq.liveevent.LiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,7 +48,7 @@ class CheckInViewModel @Inject constructor(
                     add(0, CheckInItem.Top)
                 }
 
-                checkInMap = result.sortedBy { it.time }.associateBy { it.markerNum }
+                checkInMap = result.sortedBy { it.time }.associateBy { it.imei }
             }, {
                 Log.e(TAG, "$it")
             })
@@ -68,17 +68,18 @@ class CheckInViewModel @Inject constructor(
     }
 
     fun setScanResult(result: ScanResult) {
-        val markerNum = result.device.address
-        Log.d(TAG, "setScanResult: $markerNum")
+        val newCheckIn = parseBleRawData(result) ?: return
+        val imei = newCheckIn.imei
+        Log.d(TAG, "setScanResult: $imei")
 
-        if (currentProcess.contains(markerNum)) return
-        currentProcess.add(markerNum)
+        if (currentProcess.contains(imei)) return
+        currentProcess.add(imei)
 
-        val checkIn = checkInMap[result.device.address]
+        val checkIn = checkInMap[imei]
         if (checkIn == null || canInsertCheckIn(checkIn)) {
             insertCheckIn(parseBleRawData(result))
         } else {
-            currentProcess.remove(markerNum)
+            currentProcess.remove(imei)
         }
     }
 
@@ -98,7 +99,7 @@ class CheckInViewModel @Inject constructor(
             .subscribe(
                 {
                     init()
-                    currentProcess.remove(entity.markerNum)
+                    currentProcess.remove(entity.imei)
                     viewEvent.value = ViewEvent.CheckInFound(entity)
                     Log.d(TAG, "insertCheckIn complete: $entity")
                 },
@@ -150,12 +151,11 @@ class CheckInViewModel @Inject constructor(
         val accX = atan(yAxis / sqrt(xAxis.pow(2) + zAxis.pow(2))) * ActivityViewModel.RADIAN_TO_DEGREE
         val accY = atan((-xAxis) / sqrt(yAxis.pow(2) + zAxis.pow(2))) * ActivityViewModel.RADIAN_TO_DEGREE
         val accZ = atan(zAxis / sqrt((-xAxis).pow(2) + yAxis.pow(2))) * ActivityViewModel.RADIAN_TO_DEGREE
-
 //        Log.d(TAG, "accX: $accX, accY: $accY, accZ: $accZ")
 
         return CheckIn(
             time = getDateString(),
-            markerNum = result.device.address,
+            imei = imei.toHexString().replace(" ", ""),
             x = String.format("%.2f", accX),
             y = String.format("%.2f", accY),
             z = String.format("%.2f", accZ)

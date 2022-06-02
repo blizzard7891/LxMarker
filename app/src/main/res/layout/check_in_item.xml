@@ -44,7 +44,7 @@
             style="@style/table_text_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="@{item.checkIn.markerNumFormatText}"
+            android:text="@{item.checkIn.imeiFormatText}"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/acceleration"
