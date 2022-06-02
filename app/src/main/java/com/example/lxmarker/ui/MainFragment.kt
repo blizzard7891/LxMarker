@@ -50,7 +50,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         }.toTypedArray()
 
         if (deniedPermissions.isNotEmpty()) {
-            requireActivity().requestPermissions(deniedPermissions,REQUEST_CODE_PERMISSION)
+            requireActivity().requestPermissions(deniedPermissions, REQUEST_CODE_PERMISSION)
         }
     }
 
@@ -68,13 +68,17 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 Manifest.permission.BLUETOOTH_ADMIN,
                 Manifest.permission.BLUETOOTH_CONNECT,
                 Manifest.permission.BLUETOOTH_ADVERTISE,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.READ_PHONE_NUMBERS
             )
         } else {
             arrayOf(
                 Manifest.permission.BLUETOOTH,
                 Manifest.permission.BLUETOOTH_ADMIN,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.READ_PHONE_NUMBERS
             )
         }
     }

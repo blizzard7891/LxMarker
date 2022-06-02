@@ -38,8 +38,14 @@ class CheckInViewModel @Inject constructor(
     var scannable: Boolean = false
 
     private val currentProcess: HashSet<String> = hashSetOf()
+    private var phoneNumber: String = ""
 
-    fun init() {
+    fun init(phoneNum: String) {
+        phoneNumber = phoneNum
+        initData()
+    }
+
+    private fun initData() {
         Single.fromCallable { repository.getAllCheckIn() }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -52,7 +58,7 @@ class CheckInViewModel @Inject constructor(
                 checkInMap = result.sortedBy { it.time }.associateBy { it.imei }
             }, {
                 Log.e(TAG, "$it")
-            })
+            }).isDisposed
     }
 
     fun clearData() {
@@ -61,11 +67,11 @@ class CheckInViewModel @Inject constructor(
         }.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                init()
+                initData()
                 Log.d(TAG, "clearData complete")
             }, {
                 Log.e(TAG, "clearData error: $it")
-            })
+            }).isDisposed
     }
 
     fun setScanResult(result: ScanResult) {
@@ -93,18 +99,18 @@ class CheckInViewModel @Inject constructor(
     private fun insertCheckIn(entity: CheckIn?) {
         if (entity == null) return
 
-        repository.insertCheckIn(entity)
+        repository.insertCheckIn(entity, phoneNumber)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    init()
+                    initData()
                     currentProcess.remove(entity.imei)
                     viewEvent.value = ViewEvent.CheckInFound(entity)
                     Log.d(TAG, "insertCheckIn complete: $entity")
                 },
                 { Log.e(TAG, "insertCheckIn error: $it") }
-            )
+            ).isDisposed
     }
 
     private fun parseBleRawData(result: ScanResult): CheckIn? {

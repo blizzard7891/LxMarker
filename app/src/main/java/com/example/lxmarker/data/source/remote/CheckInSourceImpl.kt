@@ -20,8 +20,8 @@ class CheckInSourceImpl @Inject constructor() {
         .build()
         .create(GotApi::class.java)
 
-    fun requestUpload(checkIn: CheckIn): Single<ResponseBody> {
-        return gotAPi.requestUpload(mapToCheckInRequest(checkIn))
+    fun requestUpload(checkIn: CheckIn, phoneNumber: String): Single<ResponseBody> {
+        return gotAPi.requestUpload(mapToCheckInRequest(checkIn, phoneNumber))
             .flatMap { response ->
                 if (response.isSuccessful) {
                     Single.fromCallable { response.body() ?: ResponseBody(null, null, null) }
@@ -33,15 +33,17 @@ class CheckInSourceImpl @Inject constructor() {
             .doOnError { Log.e(TAG, "requestUpload error: $it") }
     }
 
-    private fun mapToCheckInRequest(checkIn: CheckIn): UploadCheckInRequest {
+    private fun mapToCheckInRequest(checkIn: CheckIn, phoneNumber: String): UploadCheckInRequest {
         return UploadCheckInRequest(
             eventDt = checkIn.time,
-            phone = checkIn.imei,
+            phone = phoneNumber,
             mac = checkIn.imei,
             x = checkIn.x,
             y = checkIn.y,
             z = checkIn.z,
-        )
+        ).also {
+            Log.d(TAG, "$it")
+        }
     }
 
     private companion object {

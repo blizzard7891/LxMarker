@@ -13,9 +13,9 @@ class MarkerRepository @Inject constructor(
 ) {
     fun getAllCheckIn(): List<CheckIn> = checkInDao.getAll()
 
-    fun insertCheckIn(checkIn: CheckIn): Completable {
+    fun insertCheckIn(checkIn: CheckIn, phoneNumber: String): Completable {
         return checkInDao.insert(checkIn)
-            .andThen(Single.defer { checkInSource.requestUpload(checkIn) })
+            .andThen(Single.defer { checkInSource.requestUpload(checkIn, phoneNumber) })
             .ignoreElement()
     }
 

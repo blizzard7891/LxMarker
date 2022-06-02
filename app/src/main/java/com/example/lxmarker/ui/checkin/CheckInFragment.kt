@@ -8,6 +8,7 @@ import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.content.Context
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
@@ -56,7 +57,13 @@ class CheckInFragment : Fragment(R.layout.check_in_fragment) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        checkInViewModel.init()
+
+        checkInViewModel.init(getPhoneNumber())
+    }
+
+    private fun getPhoneNumber(): String {
+        val telManager = requireActivity().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        return telManager.line1Number
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
