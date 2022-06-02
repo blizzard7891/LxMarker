@@ -1,4 +1,4 @@
-package com.example.lxmarker.ui
+package com.example.lxmarker.ui.checkin
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lxmarker.R
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.databinding.CheckInFragmentBinding
-import com.example.lxmarker.ui.adapter.CheckInItemListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable

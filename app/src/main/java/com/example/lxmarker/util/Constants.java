@@ -14,24 +14,14 @@
  * limitations under the License.
  */
 
-package com.example.lxmarker.ui;
+package com.example.lxmarker.util;
 
 import android.os.ParcelUuid;
 
 import java.util.UUID;
 
-/**
- * Constants for use in the Bluetooth Advertisements sample
- */
 public class Constants {
 
-    /**
-     * UUID identified with this app - set as Service UUID for BLE Advertisements.
-     * <p>
-     * Bluetooth requires a certain format for UUIDs associated with Services.
-     * The official specification can be found here:
-     * {@link https://www.bluetooth.org/en-us/specification/assigned-numbers/service-discovery}
-     */
     public static final ParcelUuid Service_UUID = ParcelUuid
             .fromString("6a36ff63-59e8-4971-8379-9e22f7a9fefb");
     public static final ParcelUuid Advertise_Data1_UUID = ParcelUuid

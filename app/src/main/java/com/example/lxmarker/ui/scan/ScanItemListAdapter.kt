@@ -1,4 +1,4 @@
-package com.example.lxmarker.ui.adapter
+package com.example.lxmarker.ui.scan
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -1,6 +1,5 @@
-package com.example.lxmarker.ui
+package com.example.lxmarker.ui.beacon
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -9,13 +8,11 @@ import android.bluetooth.le.AdvertiseData
 import android.bluetooth.le.AdvertiseSettings
 import android.bluetooth.le.BluetoothLeAdvertiser
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -23,8 +20,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.lxmarker.R
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.databinding.WirelessTagFragmentBinding
-import com.example.lxmarker.ui.dialog.UserSetDialogFragment
 import com.example.lxmarker.util.ByteArray.toHexString
+import com.example.lxmarker.util.Constants
 
 @SuppressLint("MissingPermission")
 class WirelessTagFragment : Fragment(R.layout.wireless_tag_fragment) {
@@ -33,7 +30,7 @@ class WirelessTagFragment : Fragment(R.layout.wireless_tag_fragment) {
     private val beaconViewModel: BeaconViewModel by viewModels()
 
     private val bleManager: BluetoothManager by lazy { requireActivity().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager }
-    private val bleAdapter: BluetoothAdapter by lazy { bleManager.adapter }
+    private val bleAdapter: BluetoothAdapter by lazy { bleManager.adapter.apply { name = "LX_CON" } }
     private val bleAdvertiser: BluetoothLeAdvertiser by lazy { bleAdapter.bluetoothLeAdvertiser }
 
     private var advertising = false
@@ -120,6 +117,7 @@ class WirelessTagFragment : Fragment(R.layout.wireless_tag_fragment) {
 
     private fun buildAdvertiseData(data: ByteArray): AdvertiseData {
         return AdvertiseData.Builder()
+            .setIncludeDeviceName(true)
 //            .addServiceUuid(Constants.Service_UUID)
             .addServiceData(Constants.Advertise_Data1_UUID, data)
             .build()

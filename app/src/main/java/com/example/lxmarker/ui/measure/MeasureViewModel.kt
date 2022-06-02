@@ -1,4 +1,4 @@
-package com.example.lxmarker.ui
+package com.example.lxmarker.ui.measure
 
 import android.app.Application
 import android.util.Log
@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import com.example.lxmarker.data.ScanResultItem
 import com.example.lxmarker.util.ByteArray.toHexString
-import com.example.lxmarker.util.ByteArray.toLittleEndian
 import com.example.lxmarker.util.ByteArray.toUnsignedLittleEndian
 import javax.inject.Inject
 

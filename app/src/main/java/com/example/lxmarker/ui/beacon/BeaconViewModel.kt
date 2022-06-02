@@ -1,4 +1,4 @@
-package com.example.lxmarker.ui
+package com.example.lxmarker.ui.beacon
 
 import android.annotation.SuppressLint
 import android.app.Application

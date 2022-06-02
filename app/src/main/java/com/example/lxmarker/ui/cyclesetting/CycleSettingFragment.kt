@@ -1,9 +1,7 @@
-package com.example.lxmarker.ui
+package com.example.lxmarker.ui.cyclesetting
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -14,6 +12,7 @@ import com.example.lxmarker.R
 import com.example.lxmarker.data.CyclePeriod
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.databinding.CycleSettingFragmentBinding
+import com.example.lxmarker.ui.ActivityViewModel
 
 class CycleSettingFragment : Fragment(R.layout.cycle_setting_fragment) {
 

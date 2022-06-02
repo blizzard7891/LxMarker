@@ -1,4 +1,4 @@
-package com.example.lxmarker.ui
+package com.example.lxmarker.ui.measure
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -26,6 +26,7 @@ import com.example.lxmarker.BuildConfig
 import com.example.lxmarker.R
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.databinding.MeasureFragmentBinding
+import com.example.lxmarker.ui.ActivityViewModel
 import com.hoho.android.usbserial.driver.*
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.Observable

@@ -1,4 +1,4 @@
-package com.example.lxmarker.ui
+package com.example.lxmarker.ui.scan
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
@@ -19,8 +19,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lxmarker.R
 import com.example.lxmarker.data.ViewEvent
-import com.example.lxmarker.databinding.SettingFragmentBinding
-import com.example.lxmarker.ui.adapter.ScanItemListAdapter
+import com.example.lxmarker.databinding.ScanFragmentBinding
+import com.example.lxmarker.ui.ActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
@@ -28,9 +28,9 @@ import java.util.concurrent.TimeUnit
 
 @SuppressLint("MissingPermission")
 @AndroidEntryPoint
-class SettingFragment : Fragment(R.layout.setting_fragment) {
+class ScanFragment : Fragment(R.layout.scan_fragment) {
 
-    private var binding: SettingFragmentBinding? = null
+    private var binding: ScanFragmentBinding? = null
     private val viewModel: ActivityViewModel by viewModels({ requireActivity() })
 
     private val navController: NavController by lazy { findNavController() }
@@ -74,8 +74,8 @@ class SettingFragment : Fragment(R.layout.setting_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = DataBindingUtil.bind<SettingFragmentBinding>(view)?.apply {
-            this@apply.viewModel = this@SettingFragment.viewModel
+        binding = DataBindingUtil.bind<ScanFragmentBinding>(view)?.apply {
+            this@apply.viewModel = this@ScanFragment.viewModel
             this@apply.lifecycleOwner = viewLifecycleOwner
         }
 
@@ -110,7 +110,7 @@ class SettingFragment : Fragment(R.layout.setting_fragment) {
 
         binding?.scanResultListview?.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = this@SettingFragment.adapter
+            adapter = this@ScanFragment.adapter
         }
     }
 

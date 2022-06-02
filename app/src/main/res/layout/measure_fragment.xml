@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.lxmarker.ui.MeasureViewModel" />
+            type="com.example.lxmarker.ui.measure.MeasureViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

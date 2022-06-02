@@ -25,29 +25,25 @@
 
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.example.lxmarker.ui.SettingFragment"
-        tools:layout="@layout/setting_fragment" />
+        android:name="com.example.lxmarker.ui.scan.ScanFragment"
+        tools:layout="@layout/scan_fragment" />
 
     <fragment
         android:id="@+id/measureFragment"
-        android:name="com.example.lxmarker.ui.MeasureFragment"
-        tools:layout="@layout/setting_fragment" />
+        android:name="com.example.lxmarker.ui.measure.MeasureFragment"
+        tools:layout="@layout/scan_fragment" />
 
     <fragment
         android:id="@+id/checkInFragment"
-        android:name="com.example.lxmarker.ui.CheckInFragment"
-        tools:layout="@layout/setting_fragment" />
+        android:name="com.example.lxmarker.ui.checkin.CheckInFragment"
+        tools:layout="@layout/scan_fragment" />
 
     <fragment
         android:id="@+id/wirelessTagFragment"
-        android:name="com.example.lxmarker.ui.WirelessTagFragment"
-        tools:layout="@layout/setting_fragment" />
-
-    <fragment
-        android:id="@+id/scannerFragment"
-        android:name="com.example.lxmarker.ui.ScannerFragment" />
+        android:name="com.example.lxmarker.ui.beacon.WirelessTagFragment"
+        tools:layout="@layout/scan_fragment" />
 
     <fragment
         android:id="@+id/cycleSettingFragment"
-        android:name="com.example.lxmarker.ui.CycleSettingFragment" />
+        android:name="com.example.lxmarker.ui.cyclesetting.CycleSettingFragment" />
 </navigation>

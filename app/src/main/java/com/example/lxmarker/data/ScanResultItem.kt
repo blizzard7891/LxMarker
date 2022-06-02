@@ -5,8 +5,7 @@ import android.bluetooth.BluetoothGattService
 import android.bluetooth.le.ScanResult
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.lxmarker.ui.ActivityViewModel
-import com.example.lxmarker.ui.Constants
+import com.example.lxmarker.util.Constants
 
 data class ScanResultItem(
     val scanResult: ScanResult,

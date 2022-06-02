@@ -1,4 +1,4 @@
-package com.example.lxmarker.ui
+package com.example.lxmarker.ui.checkin
 
 import android.annotation.SuppressLint
 import android.bluetooth.le.ScanResult
@@ -9,6 +9,7 @@ import com.example.lxmarker.data.CheckIn
 import com.example.lxmarker.data.CheckInItem
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.data.repository.MarkerRepository
+import com.example.lxmarker.ui.ActivityViewModel
 import com.example.lxmarker.util.ByteArray.toHexString
 import com.example.lxmarker.util.ByteArray.toLittleEndian
 import com.hadilq.liveevent.LiveEvent

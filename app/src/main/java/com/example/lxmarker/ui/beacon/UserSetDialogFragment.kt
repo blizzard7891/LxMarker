@@ -1,9 +1,8 @@
-package com.example.lxmarker.ui.dialog
+package com.example.lxmarker.ui.beacon
 
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.Spanned
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -11,7 +10,6 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.example.lxmarker.R
-import com.example.lxmarker.ui.BeaconViewModel
 import java.util.regex.Pattern
 
 class UserSetDialogFragment(

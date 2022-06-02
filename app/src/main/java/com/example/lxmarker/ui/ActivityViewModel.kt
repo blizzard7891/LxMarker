@@ -15,6 +15,7 @@ import com.example.lxmarker.data.CyclePeriod
 import com.example.lxmarker.data.ScanResultItem
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.data.repository.MarkerRepository
+import com.example.lxmarker.util.Constants
 import com.hadilq.liveevent.LiveEvent
 import com.hadilq.liveevent.LiveEventConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
