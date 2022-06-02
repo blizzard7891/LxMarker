@@ -7,6 +7,7 @@ import android.provider.Settings
 import androidx.lifecycle.*
 import com.example.lxmarker.data.ViewEvent
 import com.hadilq.liveevent.LiveEvent
+import com.hadilq.liveevent.LiveEventConfig
 import javax.inject.Inject
 
 class BeaconViewModel @Inject constructor(context: Application) : AndroidViewModel(context) {
@@ -21,7 +22,7 @@ class BeaconViewModel @Inject constructor(context: Application) : AndroidViewMod
         addSource(_userName) { if (canAdvertise()) value = getAdvertiseData() }
     }.distinctUntilChanged()
 
-    val viewEvent: MutableLiveData<ViewEvent> = LiveEvent()
+    val viewEvent: MutableLiveData<ViewEvent> = LiveEvent(LiveEventConfig.PreferFirstObserver)
 
     private val sharedPref by lazy { getApplication<Application>().getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE) }
 
@@ -40,8 +41,8 @@ class BeaconViewModel @Inject constructor(context: Application) : AndroidViewMod
     }
 
     private fun initUserName() {
-        _userName.value = sharedPref.getString(KEY_USER_NAME, "")?.also {
-            if (it.isEmpty()) viewEvent.value = ViewEvent.UserNameSet
+        _userName.value = sharedPref.getString(KEY_USER_NAME, "").also {
+            if (it.isNullOrEmpty()) viewEvent.value = ViewEvent.UserNameSet
         }
     }
 
