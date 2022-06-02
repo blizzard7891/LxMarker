@@ -18,12 +18,12 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lxmarker.R
-import com.example.lxmarker.ui.adapter.ScanItemListAdapter
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.databinding.SettingFragmentBinding
+import com.example.lxmarker.ui.adapter.ScanItemListAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.Completable
+import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 @SuppressLint("MissingPermission")

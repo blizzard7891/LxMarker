@@ -26,12 +26,11 @@ import com.example.lxmarker.BuildConfig
 import com.example.lxmarker.R
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.databinding.MeasureFragmentBinding
-import com.example.lxmarker.util.HexDump
 import com.hoho.android.usbserial.driver.*
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 

@@ -2,6 +2,8 @@ package com.example.lxmarker.data.source
 
 import android.content.Context
 import androidx.room.Room
+import com.example.lxmarker.data.source.local.CheckInDao
+import com.example.lxmarker.data.source.local.LxDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

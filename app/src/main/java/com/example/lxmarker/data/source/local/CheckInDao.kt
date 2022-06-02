@@ -1,17 +1,16 @@
-package com.example.lxmarker.data.source
+package com.example.lxmarker.data.source.local
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.lxmarker.data.CheckIn
-import io.reactivex.rxjava3.core.Single
+import io.reactivex.Completable
 
 @Dao
 interface CheckInDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(checkIn: CheckIn)
+    fun insert(checkIn: CheckIn): Completable
 
     @Query("SELECT * FROM check_in")
     fun getAll(): List<CheckIn>

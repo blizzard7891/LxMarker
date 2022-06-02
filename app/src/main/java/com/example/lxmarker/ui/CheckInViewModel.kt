@@ -13,10 +13,10 @@ import com.example.lxmarker.util.ByteArray.toHexString
 import com.example.lxmarker.util.ByteArray.toLittleEndian
 import com.hadilq.liveevent.LiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.Completable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -92,9 +92,8 @@ class CheckInViewModel @Inject constructor(
     private fun insertCheckIn(entity: CheckIn?) {
         if (entity == null) return
 
-        Completable.fromAction {
-            repository.insertCheckIn(entity)
-        }.subscribeOn(Schedulers.io())
+        repository.insertCheckIn(entity)
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {

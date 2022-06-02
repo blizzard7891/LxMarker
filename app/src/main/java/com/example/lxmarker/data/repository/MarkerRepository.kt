@@ -1,17 +1,23 @@
 package com.example.lxmarker.data.repository
 
-import androidx.lifecycle.LiveData
 import com.example.lxmarker.data.CheckIn
-import com.example.lxmarker.data.source.CheckInDao
-import io.reactivex.rxjava3.core.Single
+import com.example.lxmarker.data.source.local.CheckInDao
+import com.example.lxmarker.data.source.remote.CheckInSourceImpl
+import io.reactivex.Completable
+import io.reactivex.Single
 import javax.inject.Inject
 
 class MarkerRepository @Inject constructor(
-    private val checkInDao: CheckInDao
+    private val checkInDao: CheckInDao,
+    private val checkInSource: CheckInSourceImpl
 ) {
     fun getAllCheckIn(): List<CheckIn> = checkInDao.getAll()
 
-    fun insertCheckIn(checkIn: CheckIn) = checkInDao.insert(checkIn)
+    fun insertCheckIn(checkIn: CheckIn): Completable {
+        return checkInDao.insert(checkIn)
+            .andThen(Single.defer { checkInSource.requestUpload(checkIn) })
+            .ignoreElement()
+    }
 
     fun deleteAllCheckIn() = checkInDao.deleteAll()
 }

@@ -2,29 +2,23 @@ package com.example.lxmarker.ui
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.bluetooth.*
+import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothProfile
 import android.bluetooth.le.ScanResult
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
-import com.example.lxmarker.data.CheckIn
 import com.example.lxmarker.data.CyclePeriod
 import com.example.lxmarker.data.ScanResultItem
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.data.repository.MarkerRepository
-import com.example.lxmarker.util.ByteArray.toLittleEndian
 import com.hadilq.liveevent.LiveEvent
 import com.hadilq.liveevent.LiveEventConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
-import kotlin.math.atan
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 @SuppressLint("MissingPermission")
 @HiltViewModel
@@ -199,80 +193,6 @@ class ActivityViewModel @Inject constructor(
 
     private fun mapToScanResultItem(scanResult: ScanResult): ScanResultItem {
         return ScanResultItem(scanResult = scanResult)
-    }
-
-    private fun parseBleRawData(result: ScanResult, battery: Int) {
-        result.scanRecord
-        val byteArray = result.scanRecord!!.bytes
-        val stxIndex = byteArray.withIndex().find { (_, byte) -> byte == BLE_VALUE_STX }?.index ?: return
-
-        var currentIndex = stxIndex
-        //  uint8_t stx;
-        val stx = byteArray.copyOfRange(currentIndex, currentIndex.inc())
-//        Log.d(TAG, "stx: ${stx.toHexString()}")
-        currentIndex++
-        //	uint8_t select;
-        val select = byteArray.copyOfRange(currentIndex, currentIndex.inc())
-//        Log.d(TAG, "select: ${select.toHexString()}")
-        currentIndex++
-        //	uint16_t etc;
-        val etc = byteArray.copyOfRange(currentIndex, currentIndex + 2)
-//        Log.d(TAG, "etc: ${etc.toHexString()}")
-        currentIndex += 2
-        //	uint8_t  imei[8];
-        val imei = byteArray.copyOfRange(currentIndex, currentIndex + 8)
-//        Log.d(TAG, "imei: ${imei.toHexString()}")
-        currentIndex += 8
-        //	int16_t x_axis;
-        val xAxis = byteArray.copyOfRange(currentIndex, currentIndex + 2).toLittleEndian().toDouble()
-//        Log.d(TAG, "xAxis: ${xAxis}")
-
-        currentIndex += 2
-        //	int16_t y_axis;
-        val yAxis = byteArray.copyOfRange(currentIndex, currentIndex + 2).toLittleEndian().toDouble()
-//        Log.d(TAG, "yAxis: ${yAxis}")
-
-        currentIndex += 2
-        //	int16_t z_axis;
-        val zAxis = byteArray.copyOfRange(currentIndex, currentIndex + 2).toLittleEndian().toDouble()
-//        Log.d(TAG, "zAxis: ${zAxis}")
-
-        currentIndex += 2
-        //	uint8_t etx;
-        val etx = byteArray.copyOfRange(currentIndex, currentIndex.inc())
-//        Log.d(TAG, "etx: ${etx.toHexString()}")
-
-        val accX = atan(yAxis / sqrt(xAxis.pow(2) + zAxis.pow(2))) * RADIAN_TO_DEGREE
-        val accY = atan((-xAxis) / sqrt(yAxis.pow(2) + zAxis.pow(2))) * RADIAN_TO_DEGREE
-        val accZ = atan(zAxis / sqrt((-xAxis).pow(2) + yAxis.pow(2))) * RADIAN_TO_DEGREE
-
-//        Log.d(TAG, "accX: $accX, accY: $accY, accZ: $accZ")
-
-        val entity = CheckIn(
-            time = getDateString(),
-            imei = result.device.address.substring(0, 8) + "\n" + result.device.address.substring(8),
-            x = String.format("%.2f", accX),
-            y = String.format("%.2f", accY),
-            z = String.format("%.2f", accZ)
-        )
-
-        Completable.fromAction {
-            repository.insertCheckIn(entity)
-        }.subscribeOn(Schedulers.io())
-            .subscribe({
-                Log.d(TAG, "insertCheckIn complete: $entity")
-            }, {
-                Log.e(TAG, "insertCheckIn error: $it")
-            })
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    private val simpleDateFormat = SimpleDateFormat("yy.MM.dd\nHH:mm:ss")
-
-    private fun getDateString(): String {
-        val stamp = System.currentTimeMillis()
-        val date = Date(stamp)
-        return simpleDateFormat.format(date)
     }
 
     companion object {
