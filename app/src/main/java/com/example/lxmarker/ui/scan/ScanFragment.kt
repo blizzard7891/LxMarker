@@ -47,7 +47,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
             super.onScanResult(callbackType, result)
             val deviceName = result.device.name
             Log.d(TAG, "scan result: $deviceName")
-            if (deviceName.isNullOrEmpty() || !deviceName.contains("LX"))
+            if (deviceName.isNullOrEmpty() || !deviceName.contains("LX_MARKER", true))
                 return
             viewModel.setScanResult(result)
         }

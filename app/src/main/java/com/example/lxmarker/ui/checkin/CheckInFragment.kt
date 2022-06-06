@@ -44,7 +44,7 @@ class CheckInFragment : Fragment(R.layout.check_in_fragment) {
             super.onScanResult(callbackType, result)
             val deviceName = result.device.name
             Log.d(TAG, "scan result: $deviceName")
-            if (deviceName.isNullOrEmpty() || !deviceName.contains("LX"))
+            if (deviceName.isNullOrEmpty() || !deviceName.contains("LX_MARKER", true))
                 return
             checkInViewModel.setScanResult(result)
         }
