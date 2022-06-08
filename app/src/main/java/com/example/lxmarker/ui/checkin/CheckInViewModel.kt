@@ -10,7 +10,6 @@ import com.example.lxmarker.data.CheckInItem
 import com.example.lxmarker.data.ViewEvent
 import com.example.lxmarker.data.repository.MarkerRepository
 import com.example.lxmarker.ui.ActivityViewModel
-import com.example.lxmarker.util.ByteArray.toHexString
 import com.example.lxmarker.util.ByteArray.toLittleEndian
 import com.hadilq.liveevent.LiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,7 +54,7 @@ class CheckInViewModel @Inject constructor(
                     add(0, CheckInItem.Top)
                 }
 
-                checkInMap = result.sortedBy { it.time }.associateBy { it.imei }
+                checkInMap = result.sortedBy { it.time }.associateBy { it.markerNum }
             }, {
                 Log.e(TAG, "$it")
             }).isDisposed
@@ -75,18 +74,17 @@ class CheckInViewModel @Inject constructor(
     }
 
     fun setScanResult(result: ScanResult) {
-        val newCheckIn = parseBleRawData(result) ?: return
-        val imei = newCheckIn.imei
-        Log.d(TAG, "setScanResult: $imei")
+        val markerNum = result.device.address
+        Log.d(TAG, "setScanResult: $markerNum")
 
-        if (currentProcess.contains(imei)) return
-        currentProcess.add(imei)
+        if (currentProcess.contains(markerNum)) return
+        currentProcess.add(markerNum)
 
-        val checkIn = checkInMap[imei]
+        val checkIn = checkInMap[markerNum]
         if (checkIn == null || canInsertCheckIn(checkIn)) {
             insertCheckIn(parseBleRawData(result))
         } else {
-            currentProcess.remove(imei)
+            currentProcess.remove(markerNum)
         }
     }
 
@@ -105,7 +103,7 @@ class CheckInViewModel @Inject constructor(
             .subscribe(
                 {
                     initData()
-                    currentProcess.remove(entity.imei)
+                    currentProcess.remove(entity.markerNum)
                     viewEvent.value = ViewEvent.CheckInFound(entity)
                     Log.d(TAG, "insertCheckIn complete: $entity")
                 },
@@ -161,7 +159,7 @@ class CheckInViewModel @Inject constructor(
 
         return CheckIn(
             time = getDateString(),
-            imei = imei.toHexString().replace(" ", ""),
+            markerNum = result.device.address,
             x = String.format("%.2f", accX),
             y = String.format("%.2f", accY),
             z = String.format("%.2f", accZ)

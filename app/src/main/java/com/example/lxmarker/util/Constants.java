@@ -39,4 +39,6 @@ public class Constants {
     public static final String CMD_BLE_START = "S1E";
     public static final String CMD_BLE_STOP = "S0E";
     public static final String CMD_BLE_CONTINUE = "S2E";
+
+    public static final String REQUEST_UPLOAD_MARKER_NUM = "EF:2A:8E:12:0C:93";
 }

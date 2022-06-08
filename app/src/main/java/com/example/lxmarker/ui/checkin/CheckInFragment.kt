@@ -98,7 +98,7 @@ class CheckInFragment : Fragment(R.layout.check_in_fragment) {
                     .setTitle("LX MARKER 감지")
                     .setMessage(
                         """
-                        감지 ID [${it.imei}]
+                        감지 ID [${it.markerNum}]
                         감지 시간 [${it.time}]
                         가속도 [X:${it.x}, Y:${it.y}, Z:${it.z}]
                     """.trimIndent()

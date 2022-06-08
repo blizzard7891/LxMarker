@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.lxmarker.data.CheckIn
 import com.example.lxmarker.data.source.remote.request.UploadCheckInRequest
 import com.example.lxmarker.data.source.remote.response.ResponseBody
+import com.example.lxmarker.util.Constants
 import com.example.lxmarker.util.Global
 import io.reactivex.Single
 import retrofit2.Retrofit
@@ -37,7 +38,7 @@ class CheckInSourceImpl @Inject constructor() {
         return UploadCheckInRequest(
             eventDt = checkIn.time,
             phone = phoneNumber,
-            mac = checkIn.imei,
+            mac = Constants.REQUEST_UPLOAD_MARKER_NUM,
             x = checkIn.x,
             y = checkIn.y,
             z = checkIn.z,

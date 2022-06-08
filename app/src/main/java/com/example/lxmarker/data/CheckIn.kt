@@ -1,14 +1,13 @@
 package com.example.lxmarker.data
 
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "check_in")
 data class CheckIn(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val time: String,
-    val imei: String,
+    val markerNum: String,
     val x: String,
     val y: String,
     val z: String
@@ -23,9 +22,9 @@ data class CheckIn(
             return replacedTime.substring(0, middle) + "\n" + time.substring(middle, time.length)
         }
 
-    val imeiFormatText: String
+    val markerNumFormatText: String
         get() {
-            val middle = imei.length / 2
-            return imei.substring(0, middle) + "\n" + imei.substring(middle, imei.length)
+            val middle = markerNum.length / 2
+            return markerNum.substring(0, middle) + "\n" + markerNum.substring(middle, markerNum.length)
         }
 }
